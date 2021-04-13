@@ -1,37 +1,5 @@
 InnoDB 
 
-### 事务
-
-![事务](./images/2.png)
- 
-### 并发事务带来的问题
-
-![并发事务带来的问题](./images/3.png)
-
-### 事务隔离级别
-
-![并发事务带来的问题](./images/4.png)
-
-Read uncommitted 读未提交
-
-Read committed   读已提交
-
-Repeatable read  可重复读
-
-Serializable     串行化
-
-InnoDB 默认的隔离级别是 Repeatable read;
-
-查看事务隔离级别
-
-    show variables like "tx_isolation";
-
-mysql 版本 >= 8.0
-
-    select @@transaction_isolation;
-
-    set session transaction isolation level serializable;
-
 
 ### 行锁
 
