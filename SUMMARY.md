@@ -29,6 +29,6 @@
   * [InnoDB](Mysql/InnoDB.md) 
   * [常用技巧](Mysql/常用技巧.md) 
   * [日志](Mysql/日志.md) 
-* [Reids]()
+* [Redis]()
   * [数据结构](Redis/数据结构.md) 
   * [一些题目](Redis/一些题目.md) 
