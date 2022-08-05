@@ -28,7 +28,7 @@
     "pageNumbers": true,
     "paperSize": "a4"
   },
-  "plugins": ["page-treeview", "code", "pageview-count", "popup", "tbfed-pagefooter", "favicon",
+  "plugins": [ "code", "popup",
     "search-plus", "expandable-chapters", "hide-element", "back-to-top-button", "splitter",
     "-lunr", "-search", "-sharing", "sharing-plus", "chapter-fold"],
   "pluginsConfig": {
