@@ -1,2 +1,3 @@
 FROM fellah/gitbook
-CMD "/bin/sh -c /usr/local/bin/gitbook install; /bin/sh -c /usr/local/bin/gitbook serve"
+# the work_dir is /srv/gitbook
+CMD ["/bin/sh", "-c", "/srv/gitbook/run.sh"]
