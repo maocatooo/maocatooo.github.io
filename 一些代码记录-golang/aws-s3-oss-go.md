@@ -6,7 +6,6 @@ go get github.com/aws/aws-sdk-go@v1.44.70
 
 
 ```golang
-
 package main
 
 import (
@@ -32,7 +31,12 @@ func NewSess() *session.Session {
 		Endpoint:         aws.String(end_point),
 		Region:           aws.String("us-east-1"),
 		DisableSSL:       aws.Bool(true),
-		S3ForcePathStyle: aws.Bool(false), //virtual-host style方式，不要修改
+
+		/*
+		// false 会使用 virtual-host style方式， http://192.168.163.121:9000 -> http://bucket.192.168.163.121:9000
+		// true 会使用 强制使用路径方式， http://192.168.163.121:9000 -> http://192.168.163.121:9000/bucket
+		*/
+		S3ForcePathStyle: aws.Bool(true),
 	})
 
 	if err != nil {
