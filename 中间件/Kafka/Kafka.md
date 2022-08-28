@@ -29,7 +29,7 @@
 
     提交日志 Commit Log
     
-![Kafka架构](images/Kafka架构.jpeg)    
+![Kafka架构](images/kafka架构.jpeg)    
 
 ### Kafka架构图
 
