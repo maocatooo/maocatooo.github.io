@@ -30,3 +30,23 @@ spec:
           hostPath:
             path: /root/mybook
 status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mybook
+  name: mybook
+spec:
+  ports:
+    - port: 4000
+      protocol: TCP
+      targetPort: 4000
+  selector:
+    app: mybook
+  type: NodePort
+status:
+  loadBalancer: {}
