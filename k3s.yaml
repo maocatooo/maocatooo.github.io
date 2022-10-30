@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mybook
+  name: mybook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mybook
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mybook
+    spec:
+      containers:
+        - image: fellah/gitbook
+          name: gitbook
+          resources: {}
+          command: ["/bin/sh", "-c", "/srv/gitbook/run.sh"]
+          volumeMounts:
+            - mountPath: /srv/gitbook
+              name: "gitbook"
+      volumes: #在该pod上定义共享存储卷列表
+        - name: "gitbook"     #共享存储卷名称 （volumes类型有很多种）
+          hostPath:
+            path: /root/mybook
+status: {}
