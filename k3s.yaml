@@ -50,3 +50,18 @@ spec:
   type: NodePort
 status:
   loadBalancer: {}
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: dashboard
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`maocat.cc`)
+      kind: Rule
+      services:
+        - name: mybook
+          kind: Servic
