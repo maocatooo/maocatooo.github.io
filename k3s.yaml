@@ -43,7 +43,7 @@ metadata:
 spec:
   ports:
     - port: 4000
-      name: web
+      name: web1
       protocol: TCP
       targetPort: 4000
   selector:
@@ -59,11 +59,12 @@ metadata:
   name: mybook-ingress
 spec:
   rules:
-    - host: "maocat.cc"
-      http:
+    - http:
         paths:
-          - backend:
+          - path: /
+            pathType: Prefix
+            backend:
               service:
                 name: mybook
                 port:
-                  name: web
+                  name: web1
