@@ -65,3 +65,4 @@ spec:
             backend:
               service:
                 name: mybook
+              prot: 4000
