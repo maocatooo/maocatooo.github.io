@@ -59,11 +59,10 @@ metadata:
   name: mybook-ingress
 spec:
   rules:
-    - http:
+    - host: "maocat.cc"
+      http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
+          - backend:
               service:
                 name: mybook
                 port:
