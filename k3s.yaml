@@ -43,6 +43,7 @@ metadata:
 spec:
   ports:
     - port: 4000
+      name: web
       protocol: TCP
       targetPort: 4000
   selector:
@@ -65,4 +66,5 @@ spec:
             backend:
               service:
                 name: mybook
-                port: 4000
+                port:
+                  name: web
