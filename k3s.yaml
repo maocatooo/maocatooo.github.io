@@ -65,4 +65,4 @@ spec:
             backend:
               service:
                 name: mybook
-              port: 4000
+                port: 4000
