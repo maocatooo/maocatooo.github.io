@@ -64,4 +64,4 @@ spec:
       kind: Rule
       services:
         - name: mybook
-          kind: Servic
+          kind: Service
