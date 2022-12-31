@@ -9,7 +9,7 @@ docker 创建一个 MinIO 的容器
 MINIO_ROOT_USER 和 MINIO_ROOT_PASSWORD 就是 9001 端口的登录的账号密码，也是AK和SK(也可以进入后台自己更换)
 
 ```
-docker run   -p 9000:9000   -p 9001:9001   --name minio1   -v ~/minio/data:/data   -e "MINIO_ROOT_USER=AKIAIOSFODNN7EXAMPLE"   -e "MINIO_ROOT_PASSWORD=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"   quay.io/minio/minio server /data --console-address ":9001"
+docker run -p 9000:9000 -p 9001:9001 --name minio1 -v ~/minio/data:/data -e "MINIO_ROOT_USER=AKIAIOSFODNN7EXAMPLE" -e "MINIO_ROOT_PASSWORD=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" quay.io/minio/minio server /data --console-address ":9001"
 
 ```
 
