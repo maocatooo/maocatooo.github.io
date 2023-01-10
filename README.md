@@ -4,3 +4,4 @@
 * [记一次 Golang 定时器 cpu 使用率过高的问题](blog/golang_time_cpu.md)
 * [使用 AWS-SDK 上传文件到 MinIO ](blog/golang/aws-s3-oss-go.md)
 * [ Kubeadm 安装 K8S ](K8S/install.md)
+* [微服务框架 go-micro 代理 proxy 接受消息值最大修改](blog/golang/go_micro_MaxCallRecvMsgSize.md) 
