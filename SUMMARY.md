@@ -1,5 +1,6 @@
 * [ blog ](README.md)
   * [微服务框架 go-micro 代理 proxy 接受消息值最大修改](blog/golang/go_micro_MaxCallRecvMsgSize.md) 
+  * [错误的初始化 Slice, 痛痛痛](blog/golang/error_init_slice.md)
   * [使用 AWS-SDK 上传文件到 MinIO](blog/golang/aws-s3-oss-go.md) 
   * [发布自己go包](blog/golang/发布自己go包.md) 
   * [记一次golang定时器cpu使用过高的问题](blog/golang/golang_time_cpu.md)
