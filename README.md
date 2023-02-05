@@ -1,3 +1,4 @@
+Blog
 * [再见 2022, 2022 总结](blog/summary_by_2022.md)
 * [发布属于自己 Golang Package ](blog/golang/发布自己go包.md)
 * [服务器时间导致服务崩溃](blog/bug_for_the_server_date.md)
@@ -6,3 +7,7 @@
 * [ Kubeadm 安装 K8S ](K8S/install.md)
 * [错误的初始化 Slice, 痛痛痛](blog/golang/error_init_slice.md)
 * [微服务框架 go-micro 代理 proxy 接受消息值最大修改](blog/golang/go_micro_MaxCallRecvMsgSize.md) 
+
+Golang
+* [slice](golang/slice.md) 
+* [map](golang/map.md) 

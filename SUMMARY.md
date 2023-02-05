@@ -7,6 +7,7 @@
   * [服务器时间导致服务崩溃](blog/bug_for_the_server_date.md)
   * [再见 2022, 2022 总结](blog/summary_by_2022.md)
 * [Golang]()
+  * [slice](golang/slice.md) 
   * [map](golang/map.md) 
   * [内存管理](golang/内存管理.md) 
   * [gmp](golang/gmp.md) 

@@ -2,7 +2,7 @@
 
 先上代码
 
-```
+```go
 package main
 
 import "fmt"
