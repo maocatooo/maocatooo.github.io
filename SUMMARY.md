@@ -9,6 +9,7 @@
 * [Golang]()
   * [slice](golang/slice.md) 
   * [map](golang/map.md) 
+  * [channel](golang/channel.md) 
   * [内存管理](golang/内存管理.md) 
   * [gmp](golang/gmp.md) 
   * [make_new](golang/make_new.md) 

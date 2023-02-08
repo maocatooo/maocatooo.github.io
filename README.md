@@ -11,3 +11,4 @@ Blog
 Golang
 * [slice](golang/slice.md) 
 * [map](golang/map.md) 
+* [channel](golang/channel.md) 
