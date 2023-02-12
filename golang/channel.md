@@ -101,7 +101,7 @@ runtime.selectnbsend()
 
 创建一个等待结构并将其加入 Channel 的接受队列中，当前 Goroutine 陷入阻塞，等待调度器的唤醒
 
-### 触发 Goroutine 调度的两个时机：
+#### 触发 Goroutine 调度的两个时机：
 
 - 当 Channel 为空时；
 - 当缓冲区中不存在数据并且也不存在数据的发送者时
