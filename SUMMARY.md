@@ -11,6 +11,7 @@
   * [slice](golang/slice.md) 
   * [map](golang/map.md) 
   * [channel](golang/channel.md) 
+  * [mutex](golang/mutex.md) 
   * [内存管理](golang/内存管理.md) 
   * [gmp](golang/gmp.md) 
   * [make_new](golang/make_new.md) 
