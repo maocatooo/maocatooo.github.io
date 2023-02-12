@@ -18,7 +18,7 @@ type Mutex struct {
     sema  uint32
 }
 ```
-![gmp](./images/mutex.png)
+![mutex](./images/mutex.png)
 
 state 最低三位表示mutexLocked，mutexWoken， mutexStarving
 
