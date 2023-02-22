@@ -14,3 +14,4 @@ Golang
 * [map](golang/map.md) 
 * [channel](golang/channel.md) 
 * [mutex](golang/mutex.md) 
+* [gmp](golang/gmp.md) 

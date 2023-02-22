@@ -90,7 +90,7 @@ yum install -y kubelet-1.17.3 kubeadm-1.17.3 kubectl-1.17.3
 
 #开机启动和重启kubelet
 systemctl enable kubelet && systemctl start kubelet
-##注意，如果此时查看kubelet的状态，他会无限重启，等待接收集群命令，和初始化。这个是正常的。
+##注意, 如果此时查看kubelet的状态, 他会无限重启, 等待接收集群命令, 和初始化。这个是正常的。
 
 kubeadm 初始化master 
  kubeadm init \
@@ -108,7 +108,7 @@ kubeadm 初始化master
 kubeadm join 172.26.248.150:6443 --token ktnvuj.tgldo613ejg5a3x4 \
     --discovery-token-ca-cert-hash sha256:f66c496cf7eb8aa06e1a7cdb9b6be5b013c613cdcf5d1bbd88a6ea19a2b454ec
 
-#2、如果超过2小时忘记了令牌，可以这样做
+#2、如果超过2小时忘记了令牌, 可以这样做
 kubeadm token create --print-join-command #打印新令牌
 kubeadm token create --ttl 0 --print-join-command #创建个永不过期的令牌
 ```

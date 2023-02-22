@@ -6,7 +6,7 @@
 
 docker 创建一个 MinIO 的容器
 
-MINIO_ROOT_USER 和 MINIO_ROOT_PASSWORD 就是 9001 端口的登录的账号密码，也是AK和SK(也可以进入后台自己更换)
+MINIO_ROOT_USER 和 MINIO_ROOT_PASSWORD 就是 9001 端口的登录的账号密码, 也是AK和SK(也可以进入后台自己更换)
 
 ```
 docker run -p 9000:9000 -p 9001:9001 --name minio1 -v ~/minio/data:/data -e "MINIO_ROOT_USER=AKIAIOSFODNN7EXAMPLE" -e "MINIO_ROOT_PASSWORD=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY" quay.io/minio/minio server /data --console-address ":9001"
@@ -36,7 +36,7 @@ import (
 func NewSess() *session.Session {
 	access_key := "AKIAIOSFODNN7EXAMPLE"
 	secret_key := "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-	end_point := "http://192.168.163.121:9000" //endpoint设置，不要动
+	end_point := "http://192.168.163.121:9000" //endpoint设置, 不要动
 
 
 	sess, err := session.NewSession(&aws.Config{
@@ -47,8 +47,8 @@ func NewSess() *session.Session {
 		DisableSSL:       aws.Bool(true),
 
 		/*
-		// false 会使用 virtual-host style方式， http://192.168.163.121:9000 -> http://bucket.192.168.163.121:9000
-		// true 会使用 强制使用路径方式， http://192.168.163.121:9000 -> http://192.168.163.121:9000/bucket
+		// false 会使用 virtual-host style方式,  http://192.168.163.121:9000 -> http://bucket.192.168.163.121:9000
+		// true 会使用 强制使用路径方式,  http://192.168.163.121:9000 -> http://192.168.163.121:9000/bucket
 		*/
 		S3ForcePathStyle: aws.Bool(true),
 	})
@@ -97,7 +97,7 @@ func get_bucket(sess *session.Session) {
 func get_file_and_folder(sess *session.Session, bucket string) {
 
 
-	// bucket后跟，go run ....go bucketname
+	// bucket后跟, go run ....go bucketname
 	fmt.Println()
 	fmt.Println(bucket)
 
