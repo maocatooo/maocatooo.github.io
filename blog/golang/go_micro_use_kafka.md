@@ -10,8 +10,11 @@ go-micro 默认使用http服务作为服务中的Broker
 ![kafka](../images/微信图片_20230226180820.png)
 
 http服务作为服务中的Broker，有三个明显的缺点：
+
 1. 不能持久化存储
+
 2. 不能对未消费的数据，进行消费
+
 3. 每个需要发送消息的微服务都会启动一个 http Broker服务，可能会影响服务器性能
 
 broker interface
