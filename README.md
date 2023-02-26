@@ -6,6 +6,7 @@ Blog
 * [使用 AWS-SDK 上传文件到 MinIO ](blog/golang/aws-s3-oss-go.md)
 * [ Kubeadm 安装 K8S ](K8S/install.md)
 * [错误的初始化 Slice, 痛痛痛](blog/golang/error_init_slice.md)
+* [微服务框架 go-micro 使用 Kafka 作为发布订阅的 Broker ](blog/golang/go_micro_use_kafka.md) 
 * [etcd 超出空间导致服务注册不成功](blog/golang/etcd_space_exceeded.md) 
 * [微服务框架 go-micro 代理 proxy 接受消息值最大修改](blog/golang/go_micro_MaxCallRecvMsgSize.md) 
 

@@ -3,7 +3,7 @@
 
 `keyword：mvcc: database space exceeded`
 
-go-micro 使用etcd作为注册中心, 公司当前处于的是业务开发状态,发布订阅功能也是直接基于go-micro 使用etcd来做消息存储的,导致消息发布有大量消息没有及时处理, 堆积下来, 然后新服务不能写入注册信息到etcd中
+go-micro 使用etcd作为注册中心, 公司当前处于的是业务开发状态, 发布订阅功能也是直接基于go-micro 使用etcd来做消息转存的,导致消息发布有大量消息没有及时处理, 堆积下来, 然后新服务不能写入注册信息到etcd中
 
 上网搜索了一下,官方文档已经写的很清楚了 https://etcd.io/docs/v3.4/faq/#deployment ,大意是, 为了防止性能下降或无意中使键值存储过载,etcd强制将可配置的存储大小配额默认设置为2GB
 
