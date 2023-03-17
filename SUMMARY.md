@@ -8,6 +8,7 @@
   * [记一次golang定时器cpu使用过高的问题](blog/golang/golang_time_cpu.md)
   * [服务器时间导致服务崩溃](blog/bug_for_the_server_date.md)
   * [再见 2022, 2022 总结](blog/summary_by_2022.md)
+  * [用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了](blog/golang/gin_handlefunc.md)
 * [Golang]()
   * [slice](golang/slice.md) 
   * [map](golang/map.md) 
