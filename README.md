@@ -1,4 +1,5 @@
 Blog
+* [Gorm 中使用 Postgres 的 json](blog/gorm_pgsql_json.md)
 * [用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了](blog/golang/gin_handlefunc.md)
 * [再见 2022, 2022 总结](blog/summary_by_2022.md)
 * [发布属于自己 Golang Package ](blog/golang/发布自己go包.md)

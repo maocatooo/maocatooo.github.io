@@ -9,6 +9,7 @@
   * [服务器时间导致服务崩溃](blog/bug_for_the_server_date.md)
   * [再见 2022, 2022 总结](blog/summary_by_2022.md)
   * [用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了](blog/golang/gin_handlefunc.md)
+  * [Gorm 中使用 Postgres 的 json](blog/gorm_pgsql_json.md)
 * [Golang]()
   * [slice](golang/slice.md) 
   * [map](golang/map.md) 
