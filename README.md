@@ -1,4 +1,5 @@
 Blog
+* [在Golang中使用 NACOS 管理项目的配置文件](blog/golang/nacos_demo_golang.md)
 * [\[逆向学习小记之request headers藏了加密信息\] axios拦截器之axios.interceptors.request.use](blog/python/spider__interceptors.request.use.md.md)
 * [Gorm 中使用 Postgres 的 json](blog/gorm_pgsql_json.md)
 * [用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了](blog/golang/gin_handlefunc.md)
@@ -13,9 +14,27 @@ Blog
 * [etcd 超出空间导致服务注册不成功](blog/golang/etcd_space_exceeded.md) 
 * [微服务框架 go-micro 代理 proxy 接受消息值最大修改](blog/golang/go_micro_MaxCallRecvMsgSize.md) 
 
-Golang
-* [slice](golang/slice.md) 
-* [map](golang/map.md) 
-* [channel](golang/channel.md) 
-* [mutex](golang/mutex.md) 
-* [gmp](golang/gmp.md) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+[//]: # (Golang)
+
+[//]: # (* [slice]&#40;golang/slice.md&#41; )
+
+[//]: # (* [map]&#40;golang/map.md&#41; )
+
+[//]: # (* [channel]&#40;golang/channel.md&#41; )
+
+[//]: # (* [mutex]&#40;golang/mutex.md&#41; )
+
+[//]: # (* [gmp]&#40;golang/gmp.md&#41; )
