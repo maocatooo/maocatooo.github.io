@@ -53,7 +53,8 @@
       "all": ["facebook", "google", "linkedin", "twitter", "weibo", "qq"]
     },
     "icp": {
-      "number": "陕ICP备19007981号"
+      "number": "陕ICP备19007981号",
+      "label": ""
     }
   },
   "language": "zh-hans",
