@@ -30,7 +30,7 @@
   },
   "plugins": [ "code", "popup",
     "search-plus", "expandable-chapters", "hide-element", "back-to-top-button", "splitter",
-    "-lunr", "-search", "-sharing", "sharing-plus", "chapter-fold"],
+    "-lunr", "-search", "-sharing", "sharing-plus", "chapter-fold","icp"],
   "pluginsConfig": {
     "hide-element": {
       "elements": [".gitbook-link"]
@@ -51,6 +51,9 @@
     },
     "sharing": {
       "all": ["facebook", "google", "linkedin", "twitter", "weibo", "qq"]
+    },
+    "icp": {
+      "number": "陕ICP备19007981号"
     }
   },
   "language": "zh-hans",
