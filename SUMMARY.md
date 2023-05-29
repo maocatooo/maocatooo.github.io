@@ -46,6 +46,7 @@
   * [Kafka](中间件/Kafka/Kafka.md)
   * [Nacos]()
     * [安装](中间件/Nacos/install.md)
+* [git手册](git手册/git.md)
 * [操作系统](操作系统/操作系统.md)
   * [进程和线程](操作系统/进程和线程.md)
 * [网络](网络/README.md)
