@@ -1,5 +1,4 @@
 
-
 ### 本地项目和远程关联
 
 ```shell
@@ -41,4 +40,17 @@ git commit -m "(gitignore commit and remove .idea)"
 // 提交
 git push
 
+```
+
+### 用代理拉github代码
+
+```
+// 指定 http 代理 github
+git config --global http.https://github.com.proxy http://127.0.0.1:4780
+
+// 拉取代码指定 https 代理 github
+git clone https://github.com/xxxxx/xxxxx2.git --config https.proxy=https://127.0.0.1:4780
+
+// 删除代理
+git config --global --unset http.https://github.com.proxy
 ```

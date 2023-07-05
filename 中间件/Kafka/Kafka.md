@@ -79,7 +79,84 @@ cd /opt/module
 # 后台启动
 ./bin/kafka-server-start.sh -daemon config/server.properties
 
-
-
 ```
 
+### 一个 docker 的集群例子
+
+docker-compose.yaml
+```
+version: "3"
+
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:3.6'
+    container_name: zookeeper
+    ports:
+      - '2181:2181'
+    environment:
+      # 匿名登录--必须开启
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      #volumes:
+      #- ./zookeeper:/bitnami/zookeeper
+    # restart: always
+
+  kafka1:
+    image: 'bitnami/kafka:3.0'
+    container_name: kafka1
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.2.170:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    # restart: always
+    depends_on:
+      - zookeeper
+
+  kafka2:
+    image: 'bitnami/kafka:3.0'
+    container_name: kafka2
+    ports:
+      - '9093:9093'
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.2.170:9093
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    # restart: always
+    depends_on:
+      - zookeeper
+
+  kafka3:
+    image: 'bitnami/kafka:3.0'
+    container_name: kafka3
+    ports:
+      - '9094:9094'
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.2.170:9094
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    # restart: always
+    depends_on:
+      - zookeeper
+
+  # Web 管理界面 另外也可以用exporter+prometheus+grafana的方式来监控 https://github.com/danielqsj/kafka_exporter
+  kafka_manager:
+    image: 'hlebalbau/kafka-manager:latest'
+    container_name: kafka-manager
+    ports:
+      - "9022:9000"
+    environment:
+      ZK_HOSTS: "zookeeper:2181"
+    # restart: always
+    depends_on:
+      - zookeeper
+      - kafka1
+      - kafka2
+      - kafka3
+```
