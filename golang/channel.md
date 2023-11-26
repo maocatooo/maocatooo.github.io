@@ -1,4 +1,8 @@
-
+---
+title: Golang Channel
+date: 2022-12-30
+tags: [Golang]
+---
 参考 ： 
 
 https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-channel

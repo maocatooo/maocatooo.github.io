@@ -1,1 +1,4 @@
 .idea
+_book
+.vscode
+node_modules

@@ -1,4 +1,8 @@
-InnoDB 
+---
+title: MySQL InnoDB
+date: 2020-04-20
+tags: [MySQL]
+---
 
 
 ### 行锁
@@ -42,7 +46,7 @@ WHERE 条件后面没有使用索引, 或者索引失效, 行锁会升级为表�
     show status like 'innodb_row_lock_%';   
 
 
-![行锁争用情况查看](images/5.png)
+![行锁争用情况查看](./images/5.png)
 
 Innodb_row_lock_current_waits:当前正在等待锁定的数量
 Innodb_row_lock_time:从系统启动到现在锁定总时间长度

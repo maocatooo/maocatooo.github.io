@@ -1,3 +1,8 @@
+---
+title: K8S yaml
+date: 2022-01-01
+tags: [K8S]
+---
 
 
 ```

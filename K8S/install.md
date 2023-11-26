@@ -1,3 +1,10 @@
+---
+title: 安装 K8s
+date: 2022-01-01
+tags: [K8S]
+---
+
+
 ### kubeadm 安装 K8s
 
 

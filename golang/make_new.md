@@ -1,4 +1,8 @@
-
+---
+title: Golang make和new
+date: 2023-01-02
+tags: [Golang]
+---
 
 
 

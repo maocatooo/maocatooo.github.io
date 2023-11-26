@@ -1,3 +1,10 @@
+---
+title: Golang map
+date: 2023-01-02
+tags: [Golang]
+---
+
+
 参考 ： 
 
 https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/

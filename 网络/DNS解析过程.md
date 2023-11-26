@@ -1,3 +1,10 @@
+---
+title: 网络 DNS解析过程
+date: 2020-04-21
+tags: [网络]
+---
+
+
 1. 客户端查本地hosts文件
 2. DNS本地服务缓存 DNS localcache
 3. DNS server (recursion(递归)请求)

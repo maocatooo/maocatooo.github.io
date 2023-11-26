@@ -1,3 +1,9 @@
+---
+title: MySQL MyISAM
+date: 2020-04-20
+tags: [MySQL]
+---
+
 ### InnoDB 和 MyISAM 的锁
 
 MyISAM 只支持表锁
