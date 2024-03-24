@@ -74,8 +74,11 @@ def copy_images(src):
 
 def clean_hexo():
     import shutil
-    shutil.rmtree(hexo_root)
-    shutil.rmtree(hexo_asset_root)
+    try:
+        shutil.rmtree(hexo_root)
+        shutil.rmtree(hexo_asset_root)
+    except:
+        pass
 
 
 clean_hexo()

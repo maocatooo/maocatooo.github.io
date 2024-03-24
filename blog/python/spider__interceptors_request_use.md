@@ -1,4 +1,10 @@
-### <center> \[逆向学习小记之request headers藏了加密信息\] axios拦截器之axios.interceptors.request.use </center>
+---
+title: <逆向学习小记之request headers藏了加密信息>axios拦截器之axios.interceptors.request.use
+date: 2023-04-06
+tags: [Python]
+---
+
+[//]: # (### <center> \[逆向学习小记之request headers藏了加密信息\] axios拦截器之axios.interceptors.request.use </center>)
 
 网站
 ```javascript
@@ -29,7 +35,7 @@ X-Dgi-Req-Timestamp: xxx
 
 得到了 
 
-![123](../images/微信图片_20230331173735.png)
+![123](./images/微信图片_20230331173735.png)
 
 
 `function u(r)` 就是设置 header 添加加密参数的方法

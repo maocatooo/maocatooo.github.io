@@ -1,4 +1,10 @@
-### <center> Gorm 中使用 Postgres 的 json </center>
+---
+title: Gorm 中使用 Postgres 的 json
+date: 2023-03-06
+tags: [Golang, Gorm, Postgres]
+---
+
+[//]: # (### <center> Gorm 中使用 Postgres 的 json </center>)
 
 官方json文档 https://www.postgresql.org/docs/12/functions-json.html
 

@@ -1,3 +1,9 @@
+---
+title: 用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了
+date: 2023-03-06
+tags: [Golang, Gin]
+---
+
 ### <center> 用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了 </center>
 
 上家公司是用 go-micro 写 rpc, 现在跑过来写 gin, 写单元测试构造用例可太麻烦了

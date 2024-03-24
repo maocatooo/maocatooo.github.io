@@ -1,3 +1,10 @@
+---
+title: Golang 错误的初始化 Slice, 痛痛痛
+date: 2021-07-06
+tags: [Golang]
+---
+
+
 ### <center>错误的初始化 Slice, 痛痛痛</center>
 
 先上代码

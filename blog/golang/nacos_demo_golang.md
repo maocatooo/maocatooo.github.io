@@ -1,5 +1,10 @@
-### <center> 在golang中使用 NACOS 管理项目的配置文件 </center>
+---
+title: 在golang中使用 NACOS 管理项目的配置文件
+date: 2022-02-26 
+tags: [Golang, NACOS]
+---
 
+### <center> 在golang中使用 NACOS 管理项目的配置文件 </center>
 
 * [安装Nacos](../../中间件/Nacos/install.md)
 

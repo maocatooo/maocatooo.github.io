@@ -1,13 +1,20 @@
+---
+title: 微服务框架 go-micro 使用 Kafka 作为发布订阅的 Broker
+date: 2022-06-26
+tags: [go-micro, Kafka]
+---
+
+
 ### 微服务框架 go-micro 使用 Kafka 作为发布订阅的 Broker 
 
 go-micro 默认使用http服务作为服务中的Broker
 
 服务默认启动的时候
 
-![http](../images/微信图片_20230226174740.png)
+![http](./images/微信图片_20230226174740.png)
 
 使用kafka启动
-![kafka](../images/微信图片_20230226180820.png)
+![kafka](./images/微信图片_20230226180820.png)
 
 http服务作为服务中的Broker，有三个明显的缺点：
 

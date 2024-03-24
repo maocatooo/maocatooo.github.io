@@ -1,3 +1,9 @@
+---
+title: 微服务框架 go-micro 代理 proxy 接受消息值最大修改
+date: 2021-08-06
+tags: [Golang, go-micro]
+---
+
 ### <center> 微服务框架 go-micro 代理 proxy 接受消息值最大修改 </center>
 
 keyword: MaxCallRecvMsgSize
