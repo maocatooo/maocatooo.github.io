@@ -60,11 +60,6 @@ git config --global --unset http.https://github.com.proxy
 git config --global credential.helper 'store'
 ```
 
-### 保存登录状态
-```shell
-git config --global credential.helper 'store'
-```
-
 ### 使用强制重置回滚最新的提交
 ```shell
 git reset --hard HEAD^
