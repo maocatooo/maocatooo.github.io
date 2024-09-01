@@ -2,3 +2,4 @@
 _book
 .vscode
 node_modules
+hexo/blog/public/*
