@@ -63,7 +63,22 @@ git config --global credential.helper 'store'
 ### 使用强制重置回滚最新的提交
 ```shell
 git reset --hard HEAD^
+
+//回退最近两个commit,代码放回到暂存区
+git reset --soft HEAD~2
 ```
+
+### 修改github commit提交时间
+```shell
+
+// 新提交
+GIT_COMMITTER_DATE="2023-01-01T12:00:00" git commit -m "update"  --date="2023-01-01T12:00:00"
+
+// 最近一次commit
+GIT_COMMITTER_DATE="2023-01-01T12:00:00" git commit --amend --date="2023-01-01T12:00:00" --no-edit
+
+```
+
 
 ### git 重做
 ```shell
