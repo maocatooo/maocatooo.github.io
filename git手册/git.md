@@ -82,6 +82,7 @@ GIT_COMMITTER_DATE="2023-01-01T12:00:00" git commit --amend --date="2023-01-01T1
 
 ### git 重做
 ```shell
+# 注意先后顺序
 git revert HEAD
 ```
 
@@ -96,4 +97,25 @@ git update-index --no-assume-unchanged etc/config_test.yaml
 ### git 忽略https证书
 ```shell
 set GIT_SSL_NO_VERIFY=true
+```
+
+
+### git 修改当前项目的邮箱和用户名
+
+```shell
+git config user.name "maocatooo"
+
+git config user.email "maocatzk@gmail.com"
+```
+
+
+### 当前分支拉取指定commit的代码
+```shell
+git cherry-pick <commit-id>
+```
+
+
+### 给分支单独拉出来创建项目目录
+```shell
+git worktree add <dir-name> <branch-name>
 ```
