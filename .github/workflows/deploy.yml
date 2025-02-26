@@ -1,0 +1,39 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16  # 你可以根据需要更改 Node.js 版本
+
+      - name: gen hexo
+        run: python gen_hexo.py
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./hexo/blog
+
+      - name: Build project
+        run: npm run build  # 假设你使用 npm 构建项目
+        working-directory: ./hexo/blog
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./hexo/blog/public
+          user_name: "GitHub Actions"
+          user_email: "actions@github.com"
