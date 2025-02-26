@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/icons8-pet-commands-train-50.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="参考 ： https:&#x2F;&#x2F;draveness.me&#x2F;golang&#x2F;docs&#x2F;part2-foundation&#x2F;ch03-datastructure&#x2F;golang-hashmap&#x2F; https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1Sp4y1U7dJ map是一堆键值对的未排序集合 hashmap 会存在哈希冲突 解决 hash 冲突办法：  开放寻址法  线性探测法：向后依次探测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang map">
+<meta property="og:url" content="https://maocat.cc/2023/01/02/golang/map/index.html">
+<meta property="og:site_name" content="快乐笔记">
+<meta property="og:description" content="参考 ： https:&#x2F;&#x2F;draveness.me&#x2F;golang&#x2F;docs&#x2F;part2-foundation&#x2F;ch03-datastructure&#x2F;golang-hashmap&#x2F; https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1Sp4y1U7dJ map是一堆键值对的未排序集合 hashmap 会存在哈希冲突 解决 hash 冲突办法：  开放寻址法  线性探测法：向后依次探测">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://maocat.cc/asset/golang/images/hmap.png">
+<meta property="og:image" content="https://maocat.cc/asset/golang/images/bmap.png">
+<meta property="article:published_time" content="2023-01-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-26T06:41:06.749Z">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maocat.cc/asset/golang/images/hmap.png">
+  
+  
+  
+  <title>Golang map - 快乐笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"maocat.cc","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>MaoCAT</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/maocatooo">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Golang map"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-02 00:00" pubdate>
+          2023年1月2日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Golang map</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>参考 ：</p>
+<p><a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/">https://draveness.me/golang/docs/part2-foundation/ch03-datastructure/golang-hashmap/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Sp4y1U7dJ">https://www.bilibili.com/video/BV1Sp4y1U7dJ</a></p>
+<p>map是一堆键值对的未排序集合</p>
+<p>hashmap 会存在哈希冲突</p>
+<p>解决 hash 冲突办法：</p>
+<ul>
+<li>开放寻址法
+<ul>
+<li>线性探测法：向后依次探测可以存放的位置, 直到找到为止（最坏情况下时间复杂度O(n)）</li>
+<li>二次线性探测：当前key存在该地址后偏移量为（1,2,3…）的二次方地址处</li>
+<li>双重散列：对hash值使用多组散列函数重新计算位置, 直到找到空闲位置为止</li>
+</ul>
+</li>
+<li>拉链法: 每个位置对应一个链表, 查找key所在的链表, 然后在链表顺序查找位置</li>
+</ul>
+<p>golang map使用改进的拉链法解决冲突</p>
+<p>map的底层是通过hmap（hashmap）来实现的</p>
+<p>map底层数据结构</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs golang"><br><span class="hljs-keyword">type</span> hmap <span class="hljs-keyword">struct</span> &#123;<br>	count     <span class="hljs-type">int</span> <span class="hljs-comment">//表示当前哈希表中的元素数量；</span><br>	flags     <span class="hljs-type">uint8</span><br>	B         <span class="hljs-type">uint8</span> <span class="hljs-comment">//表示当前哈希表持有的 buckets 数量, 但是因为哈希表中桶的数量都 2 的倍数, 所以该字段会存储对数, 也就是 len(buckets) == 2^B；</span><br>	noverflow <span class="hljs-type">uint16</span><br>	hash0     <span class="hljs-type">uint32</span> <span class="hljs-comment">//是哈希的种子, 它能为哈希函数的结果引入随机性, 这个值在创建哈希表时确定, 并在调用哈希函数时作为参数传入；</span><br><br>	buckets    unsafe.Pointer <br>	oldbuckets unsafe.Pointer <span class="hljs-comment">// 哈希在扩容时用于保存之前 buckets </span><br>	nevacuate  <span class="hljs-type">uintptr</span> <span class="hljs-comment">// 渐进式扩容下一个需要迁移的旧桶的编号</span><br><br>	extra *mapextra  <span class="hljs-comment">//记录的是溢出桶的相关信息</span><br>&#125;<br><br><span class="hljs-keyword">type</span> mapextra <span class="hljs-keyword">struct</span> &#123;<br>	overflow    *[]*bmap<br>	oldoverflow *[]*bmap<br>	nextOverflow *bmap<br>&#125;<br><br><span class="hljs-keyword">type</span> bmap <span class="hljs-keyword">struct</span> &#123;<br>    topbits  [<span class="hljs-number">8</span>]<span class="hljs-type">uint8</span><br>    keys     [<span class="hljs-number">8</span>]keytype<br>    values   [<span class="hljs-number">8</span>]valuetype<br>    pad      <span class="hljs-type">uintptr</span><br>    overflow <span class="hljs-type">uintptr</span> <span class="hljs-comment">// 指向溢出的桶</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>hmap<br>
+<img src="/asset/golang/images/hmap.png" srcset="/img/loading.gif" lazyload alt="hmap"></p>
+<p>bmap<br>
+<img src="/asset/golang/images/bmap.png" srcset="/img/loading.gif" lazyload alt="bmap"></p>
+<p>如果哈希表要分配的桶的数目大于2^4, 就认为会使用到溢出桶的几率比较大, 就会预分配2^(B-4)个溢出桶, 溢出桶和常规桶在内存中是连续的</p>
+<p>map 扩容的负载因子是6.5</p>
+<p><code>Load factor = count/(2^B)</code></p>
+<p>负载因子超过6.5会触发<strong>翻倍扩容</strong></p>
+<p>如果负载因子没有超标, 使用的溢出桶过多, 触发<strong>等量扩容</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">B</span> &lt;= <span class="hljs-number">15</span>, noverflow(溢出桶) &gt;= <span class="hljs-number">2</span>^B<br><span class="hljs-attribute">B</span> &gt; <span class="hljs-number">15</span>, noverflow(溢出桶) &gt;= <span class="hljs-number">2</span>^<span class="hljs-number">15</span><br></code></pre></td></tr></table></figure>
+<p>为什么要等量扩容, 因为负载因子过低, 也就是count太低, 表示大量进行了删除操作, 等量扩容可以使正常桶和溢出桶中的元素可以合并, 从而减少溢出桶的使用</p>
+<h3 id="map-查找过程">map 查找过程</h3>
+<ol>
+<li>
+<p>根据key值算出哈希值</p>
+</li>
+<li>
+<p>取哈希值低位与hmap.B取模确定bucket位置</p>
+</li>
+<li>
+<p>取哈希值高位在tophash数组中查询</p>
+</li>
+<li>
+<p>如果tophash[i]中存储值也哈希值相等，则去找到该bucket中的key值进行比较</p>
+</li>
+<li>
+<p>当前bucket没有找到，则继续从下个overflow的bucket中查找。</p>
+</li>
+<li>
+<p>如果当前处于搬迁过程，则优先从oldbuckets查找</p>
+</li>
+</ol>
+<h3 id="插入过程">插入过程</h3>
+<ol>
+<li>根据key值算出哈希值</li>
+<li>取哈希值低位与hmap.B取模确定bucket位置</li>
+<li>查找该key是否已经存在，如果存在则直接更新值</li>
+<li>如果没找到将key，将key插入</li>
+</ol>
+<h3 id="map-的key必须是可以比较的">map 的key必须是可以比较的</h3>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Golang/" class="print-no-link">#Golang</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Golang map</div>
+      <div>https://maocat.cc/2023/01/02/golang/map/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年1月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/02/golang/make_new/" title="Golang make和new">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Golang make和new</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/01/01/%E5%9F%BA%E7%A1%80/coding%E6%89%8B%E5%86%8C/" title="coding手册">
+                        <span class="hidden-mobile">coding手册</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a target="_blank" href="https://beian.miit.gov.cn/" rel="nofollow noopener noopener"><span>陕ICP备19007981号-3</span></a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

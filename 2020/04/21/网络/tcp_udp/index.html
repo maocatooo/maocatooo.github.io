@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/icons8-pet-commands-train-50.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="TCP三次握手   第一次握手（SYN）：客户端向服务器发送一个SYN（同步）请求，请求建立连接。此时客户端处于SYN_SEND状态。   第二次握手（SYN+ACK）：服务器接收到客户端的SYN请求后，向客户端发送一个SYN+ACK（同步+确认）响应，表示已经收到了客户端的请求，并准备好建立连接。此时服务器处于SYN_RECV状态。   第三次握手（ACK）：客户端接收到服务器的SYN+ACK响">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络 TCP UDP">
+<meta property="og:url" content="https://maocat.cc/2020/04/21/%E7%BD%91%E7%BB%9C/tcp_udp/index.html">
+<meta property="og:site_name" content="快乐笔记">
+<meta property="og:description" content="TCP三次握手   第一次握手（SYN）：客户端向服务器发送一个SYN（同步）请求，请求建立连接。此时客户端处于SYN_SEND状态。   第二次握手（SYN+ACK）：服务器接收到客户端的SYN请求后，向客户端发送一个SYN+ACK（同步+确认）响应，表示已经收到了客户端的请求，并准备好建立连接。此时服务器处于SYN_RECV状态。   第三次握手（ACK）：客户端接收到服务器的SYN+ACK响">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://maocat.cc/asset/%E7%BD%91%E7%BB%9C/images/1.png">
+<meta property="og:image" content="https://maocat.cc/asset/%E7%BD%91%E7%BB%9C/images/2.png">
+<meta property="article:published_time" content="2020-04-21T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-26T06:41:06.745Z">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maocat.cc/asset/%E7%BD%91%E7%BB%9C/images/1.png">
+  
+  
+  
+  <title>网络 TCP UDP - 快乐笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"maocat.cc","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>MaoCAT</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/maocatooo">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="网络 TCP UDP"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-04-21 00:00" pubdate>
+          2020年4月21日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">网络 TCP UDP</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="TCP三次握手">TCP三次握手</h3>
+<ol>
+<li>
+<p>第一次握手（SYN）：客户端向服务器发送一个SYN（同步）请求，请求建立连接。此时客户端处于SYN_SEND状态。</p>
+</li>
+<li>
+<p>第二次握手（SYN+ACK）：服务器接收到客户端的SYN请求后，向客户端发送一个SYN+ACK（同步+确认）响应，表示已经收到了客户端的请求，并准备好建立连接。此时服务器处于SYN_RECV状态。</p>
+</li>
+<li>
+<p>第三次握手（ACK）：客户端接收到服务器的SYN+ACK响应后，向服务器发送一个ACK（确认）响应，表示已经收到了服务器的确认，并准备好传输数据。此时客户端处于ESTABLISHED状态，服务器也处于ESTABLISHED状态，表示连接已经建立。</p>
+</li>
+</ol>
+<p>建立连接的时候, 发送的包都不包含任何数据, 建立连接后才发送数据, 理想状态下, TCP一旦创建, 在通信双方中的任何一方主动关闭连接之前, TCP都会一直连接下去</p>
+<p>优点：</p>
+<ol>
+<li>
+<p>可以建立可靠连接：确保客户端和服务端是连接可靠的</p>
+</li>
+<li>
+<p>避免资源浪费：可以避免无效连接导致的资源浪费</p>
+</li>
+<li>
+<p>安全性高：只有在建立连接后才能传输数据</p>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>
+<p>建立连接速度慢：需要3次确认才能建立连接</p>
+</li>
+<li>
+<p>占用资源：3次握手需要占用客户端和服务端资源，如带宽，cpu等</p>
+</li>
+<li>
+<p>可能被攻击：握手过程中可能会被利用进行攻击，例如SYN洪泛攻击，SYN泄露攻击等，这会导致服务端和客户端无法正常连接，影响网络的正常运行</p>
+</li>
+</ol>
+<h4 id="为什么是三次">为什么是三次</h4>
+<p>TCP 协议的作用是, 保证数据通信的完整性和可靠性, 防止丢包</p>
+<p>TCP作为一种可靠传输控制协议, 其核心思想：既要保证数据可靠传输, 又要提高传输的效率, 而用三次恰恰可以满足以上两方面的需求</p>
+<h4 id="为什么不是两次">为什么不是两次</h4>
+<p>如果只是两次握手, 至多只有连接发起方的起始序列号能被确认, 另一方选择的序列号则得不到确认</p>
+<h4 id="tcp如何保证可靠传输">tcp如何保证可靠传输</h4>
+<p>TCP主要提供了一下几种安全机制来保证数据的安全性和可靠性</p>
+<ol>
+<li>
+<p>检验和</p>
+<p>TCP协议在发送数据前会对数据进行校验和计算，生成一个校验和，将这个校验和附加在数据包的头部。接收方在接收到数据包后，也会计算校验和，然后将计算得到的校验和与接收到的校验和进行比较，如果两者不一致，则说明数据可能已经被破坏或者发生了错误，接收方会丢弃这个数据包并发送重传请求。通过这种方式，TCP协议可以保证数据的完整性和可靠性</p>
+</li>
+<li>
+<p>序列号/确认应答</p>
+<p>TCP协议会为每个数据包分配一个唯一的序列号，接收方收到数据后，会发送一个确认应答ACK，以通知发送方数据已经正确接收。如果发送方没有收到确认应答ACK，则会重发数据包，直到收到确认应答ACK为止</p>
+</li>
+<li>
+<p>超时重传</p>
+<p>如果发送方没有收到确认应答ACK，则会定时重发数据包，直到收到确认应答ACK为止</p>
+</li>
+<li>
+<p>滑动窗口控制(流量控制)</p>
+<p>TCP协议在发送数据时，会根据接收方的接收能力设置一个滑动窗口大小。发送方在发送数据时，需要等待接收方的确认应答，确认接收到了数据包并提供了下一个期望接收的序列号，才能继续发送下一个数据包。通过这种机制，可以确保接收方可以处理自己能够处理的数据包，并且可以避免数据包的丢失或者超时等问题</p>
+</li>
+<li>
+<p>拥塞控制</p>
+<p>TCP协议通过拥塞控制机制来避免网络拥塞，保证网络的可靠性和公平性。发送方会根据网络的拥塞情况来调整发送速度，避免造成网络拥塞</p>
+</li>
+</ol>
+<h3 id="四次挥手">四次挥手</h3>
+<ol>
+<li>由客户端向服务器发送FIN报文, 请求断开连接, 序号为x。此时TCP数据包的标志位为FIN。</li>
+<li>服务器向客户端发送ACK报文, 表示收到了客户端发送的断开连接请求的数据包, 序号为y, 确认序号为x+1。此时TCP数据包的标志位ACK被设置为1</li>
+<li>服务器向客户端发送FIN包, 表示服务器向客户端发送结束请求包, 序号为y, 确认序号为x+1</li>
+<li>由客户端向服务器发送ACK报文, 表示收到服务器的结束请求包, 到这里所有流程走完, 服务器与客户端, 正式断开连接, TCP数据包的序号为x+1, 确认号为y+1</li>
+</ol>
+<p><img src="/asset/%E7%BD%91%E7%BB%9C/images/1.png" srcset="/img/loading.gif" lazyload alt="123"><br>
+TIME_WAIT ：TCP 四次握手结束后, 连接双方都不再交换消息, 但主动关闭的一方保持这个连接在一段时间（2MSL两个最大报文生命周期时间）内不可用。</p>
+<p>原因：</p>
+<p>确保最后一个确认报文能够到达（如果B没收到A发送来的确认报文, 那么就会重新发送连接释放请求报文, A等待一段时间就是为了处理这种情况的发生）<br>
+避免新旧链接混淆。（等待2MSL可以让本连接持续时间内所产生的所有报文都从网络中消失, 使得下一个新的连接请求不会出现旧的连接请求报文）</p>
+<p>优点:</p>
+<ol>
+<li>
+<p>可以防止旧连接数据包被错误地认为是新连接的数据包，从而保证连接的可靠性。</p>
+</li>
+<li>
+<p>可以确保在TCP连接关闭后，双方的所有数据包都被完全传输，防止数据的丢失和混乱。</p>
+</li>
+<li>
+<p>可以确保连接被彻底关闭，避免出现类似于半开连接的情况，从而保证网络的稳定性</p>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>
+<p>TIME_WAIT状态会占用连接资源，降低系统的性能和吞吐量。</p>
+</li>
+<li>
+<p>如果同时打开的TCP连接数很多，TIME_WAIT状态的连接会占用大量的连接资源，从而导致连接池耗尽和连接的延迟。</p>
+</li>
+<li>
+<p>TIME_WAIT状态的时长较长（通常为2MSL），可能会对系统的可用性和响应时间造成影响。</p>
+</li>
+</ol>
+<h3 id="TCP-Keepalive">TCP Keepalive</h3>
+<p>TCP Keepalive是一种TCP/IP协议中的机制，它用于检测连接是否处于活动状态。在TCP连接空闲一段时间后，如果没有数据包传输，则Keepalive机制会定期向对端发送一个空的ACK数据包，以检测连接是否仍然处于活动状态。如果对端未能及时响应，TCP会在一定时间后关闭连接，以避免无用的连接占用系统资源</p>
+<h3 id="UDP">UDP</h3>
+<p>面向无连接的传输层协议，它不保证数据传输的可靠性，也不保证数据报文的顺序。UDP主要用于音视频流媒体、在线游戏等对实时性要求较高的应用场景</p>
+<h4 id="特点">特点</h4>
+<p>无连接：UDP不像TCP那样需要在建立连接之后再传输数据，因此可以更快地传输数据。</p>
+<p>不可靠：UDP不保证数据的可靠性，因此在数据传输过程中可能会发生丢包、重复、错误等问题。</p>
+<p>简单：UDP协议的头部很短，只有8个字节，相比之下TCP协议的头部就要复杂得多</p>
+<h4 id="tpc-和-udp-的区别">tpc 和 udp 的区别?</h4>
+<ol>
+<li>
+<p>连接性：TCP是一种面向连接的协议，而UDP则是无连接的。在TCP协议中，发送方和接收方必须先建立连接，然后才能进行数据传输。而在UDP协议中，发送方直接将数据报发送到接收方，不需要先建立连接。</p>
+</li>
+<li>
+<p>可靠性：TCP是一种可靠性较高的协议，它通过序号、确认应答、重传等机制来确保数据传输的可靠性。而UDP协议则是不可靠的，它不保证数据传输的可靠性，也不保证数据报文的顺序。</p>
+</li>
+<li>
+<p>传输效率：由于TCP协议需要建立连接、保证可靠性等机制，因此传输效率相对较低。而UDP协议则没有这些机制，传输效率相对较高。</p>
+</li>
+<li>
+<p>数据大小：TCP协议没有数据大小的限制，而UDP协议则有一个64K的限制。因此，当需要传输较大的数据时，应该使用TCP协议。</p>
+</li>
+<li>
+<p>应用场景：由于TCP协议具有可靠性较高、传输效率较低的特点，适合于传输重要数据、文件下载等需要保证数据可靠性的应用场景。而UDP协议则适合于实时性要求高、数据传输量较小的应用，如在线游戏、语音通话、视频直播等</p>
+</li>
+<li>
+<p>TCP的逻辑通信信道是全双工的可靠信道, UDP则是不可靠信道</p>
+</li>
+</ol>
+<h3 id="OSI-七层协议">OSI 七层协议</h3>
+<ol>
+<li>应用层(数据): 确定进程之间通信的性质以满足用户需要以及提供网络与用户应用</li>
+<li>表示层(数据): 主要解决拥护信息的语法表示问题, 如加密解密</li>
+<li>会话层(数据): 提供包括访问验证和会话管理在内的建立和维护应用之间通信的机制, 如服务器验证用户登录便是由会话层完成的</li>
+<li>运输层(段): 实现网络不同主机上用户进程之间的数据通信, 可靠与不可靠的传输, 传输层的错误检测, 流量控制等</li>
+<li>网络层(包): 提供逻辑地址（IP）、选路, 数据从源端到目的端的传输</li>
+<li>数据链路层(帧): 将上层数据封装成帧, 用MAC地址访问媒介, 错误检测与修正</li>
+<li>物理层（比特流）：设备之间比特流的传输, 物理接口, 电气特性等</li>
+</ol>
+<h3 id="TCP-IP-四层协议">TCP/IP 四层协议</h3>
+<ol>
+<li>应用层（TELNET、FTP、SMTP、HTTP）</li>
+<li>运输层（TCP、UDP）</li>
+<li>网际层（IP、ICMP）</li>
+<li>网络接口层（PPP）</li>
+</ol>
+<h3 id="socket">socket</h3>
+<p>Socket是什么</p>
+<p>Socket是应用层与TCP/IP协议族通信的中间软件抽象层, 它是一组接口。在设计模式中, Socket其实就是一个门面模式, 它把复杂的TCP/IP协议族隐藏在Socket接口后面, 对用户来说, 一组简单的接口就是全部, 让Socket去组织数据, 以符合指定的协议</p>
+<p><img src="/asset/%E7%BD%91%E7%BB%9C/images/2.png" srcset="/img/loading.gif" lazyload alt="socket"></p>
+<p>Socket=Ip address+ TCP/UDP + port</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BD%91%E7%BB%9C/" class="print-no-link">#网络</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>网络 TCP UDP</div>
+      <div>https://maocat.cc/2020/04/21/网络/tcp_udp/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年4月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/21/%E7%BD%91%E7%BB%9C/http_https/" title="网络 http https">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">网络 http https</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/21/%E7%BD%91%E7%BB%9C/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E7%9A%84%E5%85%A8%E8%BF%87%E7%A8%8B/" title="网络 浏览器输入url的全过程">
+                        <span class="hidden-mobile">网络 浏览器输入url的全过程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a target="_blank" href="https://beian.miit.gov.cn/" rel="nofollow noopener noopener"><span>陕ICP备19007981号-3</span></a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

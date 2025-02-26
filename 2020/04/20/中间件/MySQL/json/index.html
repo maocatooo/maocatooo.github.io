@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/icons8-pet-commands-train-50.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="JSON数据在不同字段的处理方式：     大小 字符集 校验 索引 备注     varchar(N) N 表的字符集 长度限制,字符集,排序规则 普通索引，唯一索引 表总和不能超过65535个字符(除去text,JSON, blob类型)   text 65535个字符 表的字符集 长度限制,字符集,排序规则 普通索引,全文索引    JSON 64MB(默认, 可修改) utf8mb4 大小">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL MyISAM">
+<meta property="og:url" content="https://maocat.cc/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/json/index.html">
+<meta property="og:site_name" content="快乐笔记">
+<meta property="og:description" content="JSON数据在不同字段的处理方式：     大小 字符集 校验 索引 备注     varchar(N) N 表的字符集 长度限制,字符集,排序规则 普通索引，唯一索引 表总和不能超过65535个字符(除去text,JSON, blob类型)   text 65535个字符 表的字符集 长度限制,字符集,排序规则 普通索引,全文索引    JSON 64MB(默认, 可修改) utf8mb4 大小">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://maocat.cc/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/json1.png">
+<meta property="og:image" content="https://maocat.cc/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/json2.png">
+<meta property="article:published_time" content="2020-04-20T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-26T06:41:06.760Z">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maocat.cc/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/json1.png">
+  
+  
+  
+  <title>MySQL MyISAM - 快乐笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"maocat.cc","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>MaoCAT</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/maocatooo">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySQL MyISAM"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-04-20 00:00" pubdate>
+          2020年4月20日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MySQL MyISAM</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>JSON数据在不同字段的处理方式：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>大小</th>
+<th>字符集</th>
+<th>校验</th>
+<th>索引</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>varchar(N)</td>
+<td>N</td>
+<td>表的字符集</td>
+<td>长度限制,字符集,排序规则</td>
+<td>普通索引，唯一索引</td>
+<td>表总和不能超过65535个字符(除去text,JSON, blob类型)</td>
+</tr>
+<tr>
+<td>text</td>
+<td>65535个字符</td>
+<td>表的字符集</td>
+<td>长度限制,字符集,排序规则</td>
+<td>普通索引,全文索引</td>
+<td></td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>64MB(默认, 可修改)</td>
+<td>utf8mb4</td>
+<td>大小,字符集的校验,深度限制(100层),JSON格式校验</td>
+<td>利用虚拟列提取JSON字段作为索引,多值索引(类似普通索引)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>！！！注意NULL和JSON的null值不同，NULL表示字段值为空，JSON的null值表示字段值是一个空对象</p>
+<h3 id="基础：">基础：</h3>
+<ol>
+<li>插入</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `tt1` (`id`, `varchar1`, `JSON1`, `text1`) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;&#123;\&quot;a\&quot;:\&quot;GXjc0C4hOU\&quot;,\&quot;b\&quot;:5262145246&#125;&#x27;</span>, <span class="hljs-string">&#x27;&#123;\&quot;a\&quot;: \&quot;GXjc0C4hOU\&quot;, \&quot;b\&quot;: 5262145246&#125;&#x27;</span>, <span class="hljs-string">&#x27;&#123;\&quot;a\&quot;:\&quot;GXjc0C4hOU\&quot;,\&quot;b\&quot;:5262145246&#125;&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>可以理解为插入的数据实际上是JSON字符串，在插入时会自动解析为JSON对象，然后存储到JSON字段中。</p>
+<ol start="2">
+<li>修改</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 直接修改JSON字段<br><span class="hljs-keyword">UPDATE</span> `tt1` <span class="hljs-keyword">SET</span> `JSON1` <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;&#123;\&quot;a\&quot;: \&quot;GXjc0C4hOU\&quot;, \&quot;b\&quot;: 5262145246&#125;&#x27;</span> <span class="hljs-keyword">WHERE</span> `id` <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br># 直接修改JSON字段的某个值<br><span class="hljs-keyword">UPDATE</span> `tt1` <span class="hljs-keyword">SET</span> `JSON1` <span class="hljs-operator">=</span> JSON_SET(JSON1, <span class="hljs-string">&#x27;$.b&#x27;</span>, <span class="hljs-number">31</span>) <span class="hljs-keyword">WHERE</span> `id` <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br># 直接修改JSON数组<br><span class="hljs-keyword">UPDATE</span> `tt1` <span class="hljs-keyword">SET</span> `JSON_arr` <span class="hljs-operator">=</span> JSON_SET(JSON_arr, <span class="hljs-string">&#x27;$[0]&#x27;</span>, &quot;3&quot;) <span class="hljs-keyword">WHERE</span> `id` <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br># 嵌套修改<br><span class="hljs-keyword">UPDATE</span> `tt1` <span class="hljs-keyword">SET</span> `text1` <span class="hljs-operator">=</span> JSON_SET(text1, <span class="hljs-string">&#x27;$.c.d&#x27;</span>, <span class="hljs-number">31</span>) <span class="hljs-keyword">WHERE</span> `id` <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>查询(！！！使用JSON函数作为查询条件会走全表扫描)</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) <span class="hljs-keyword">as</span> JSON1  <span class="hljs-keyword">FROM</span> `tt1` <span class="hljs-keyword">WHERE</span> JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;123&#x27;</span> ;<br></code></pre></td></tr></table></figure>
+<h3 id="常用JSON函数：">常用JSON函数：</h3>
+<pre><code class="hljs">- JSON_EXTRACT(json_column, path)：从json_column中提取path指定的JSON对象，返回JSON对象。
+- JSON_UNQUOTE(json_column)：将json_column中的所有字符串类型的值都转换为普通字符串。
+- JSON_VALUE(json_column, path)：从json_column中提取path指定的JSON对象的值，返回JSON对象的值。
+- JSON_SET(json_column, path, value)：在json_column中设置path指定的JSON对象的值为value，返回修改后的json_column。
+- JSON_REMOVE(json_column, path)：在json_column中删除path指定的JSON对象，返回修改后的json_column。
+- JSON_MERGE_PRESERVE(json_column1, json_column2)：将json_column2合并到json_column1中，如果json_column1中有相同的key，则覆盖json_column1中的值。
+- JSON_MERGE_PATCH(json_column1, json_column2)：将json_column2合并到json_column1中，如果json_column1中有相同的key，则保留json_column1中的值。
+- JSON_QUERY(json_column, path)：从json_column中提取path指定的JSON对象，返回JSON对象。
+- JSON_LENGTH(json_column)：返回json_column的长度。
+- JSON_TYPE(json_column)：返回json_column的类型。
+- JSON_VALID(json_column)：判断json_column是否是一个有效的JSON字符串。
+- JSON_ARRAY_LENGTH(json_column)：返回json_column的数组长度。
+- JSON_OVERLAPS(json_column1, json_column2)：判断json_column1和json_column2是否有交集。、
+- JSON_CONTAINS(json_column1, json_column2)：判断json_column1是否包含json_column2。
+</code></pre>
+<h3 id="性能：">性能：</h3>
+<pre><code class="hljs">测试环境： 1000W条数据
+CREATE TABLE `tt1` (
+`id` int NOT NULL AUTO_INCREMENT,
+`varchar1` varchar(2047) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+`JSON1` JSON DEFAULT NULL,
+`text1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs,
+`JSON_arr` JSON DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_cs;
+
+
+SET profiling = 1;
+
+
+SELECT JSON_UNQUOTE(JSON_EXTRACT(varchar1, '$.a') ) as varchar1  FROM `tt1` ;
+SELECT JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) as JSON1  FROM `tt1` ;
+SELECT JSON_UNQUOTE(JSON_EXTRACT(text1, &quot;$.a&quot;)) as text1  FROM `tt1` ;
+
+
+SHOW PROFILES;
+</code></pre>
+<p><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/json1.png" srcset="/img/loading.gif" lazyload alt="执行速度"></p>
+<p>JSON耗时比其他类型少, MYSQL对JSON字段有单独优化,因为在插入得时候已经解析为JSON对象了,其他类型需要额外转换</p>
+<h3 id="JSON-索引">JSON-索引</h3>
+<p>JSON字段创建索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> tt1 <span class="hljs-keyword">add</span> index idx_ttt_JSON1_a( (<span class="hljs-built_in">cast</span>(JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) <span class="hljs-keyword">as</span> <span class="hljs-type">char</span>(<span class="hljs-number">255</span>) )) );<br></code></pre></td></tr></table></figure>
+<p>使用索引查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) <span class="hljs-keyword">as</span> JSON1  <span class="hljs-keyword">FROM</span> `tt2` <span class="hljs-keyword">WHERE</span> (<span class="hljs-built_in">cast</span>(JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) <span class="hljs-keyword">as</span> <span class="hljs-type">char</span>(<span class="hljs-number">255</span>) ))<span class="hljs-operator">=</span><span class="hljs-string">&#x27;123&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>效果：<br>
+<img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/json2.png" srcset="/img/loading.gif" lazyload alt="执行速度"></p>
+<p>数组形式</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> tt1 <span class="hljs-keyword">add</span> index idx_ttt_JSON1_a( (<span class="hljs-built_in">cast</span>(JSON_UNQUOTE(JSON_EXTRACT(JSON1, &quot;$.a&quot;)) <span class="hljs-keyword">as</span> <span class="hljs-type">char</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">ARRAY</span> )) );<br></code></pre></td></tr></table></figure>
+<p>查询，提供了三个查询函数</p>
+<p>MEMBER OF() 数组中是否存在某一值（如果是唯一匹配查询建议用这种否则选下面两种）</p>
+<p>JSON_CONTAINS() 数组中是否包含某些值，交集(必须都包含，此处注意mysql版本必须是8.024以上否则使用可能会失效)</p>
+<p>JSON_OVERLAPS() 数组中是否包含某些值，并集(只要包含一个就行省的用JSON_CONTAINS一直OR)</p>
+<h3 id="优缺点">优缺点</h3>
+<p>优点：</p>
+<ol>
+<li>灵活的数据结构：JSON字段可以存储复杂的数据结构，如数组、对象、字符串等。</li>
+<li>存储空间：JSON字段的存储空间比其他类型更大。</li>
+<li>提供了JSON的校验功能：JSON字段可以对数据结构进行校验，确保数据符合要求。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>性能：JSON字段的性能比其他类型更差,尤其是在查询时。</li>
+<li>结构可能会混乱,如字符串和数字可以混合,需要插入的人保证结构一致性。如：row1.JSON_field = {“a”: “123”} row2.JSON_field = {“a”: 456}</li>
+<li>数据更新不方便：JSON字段的更新比较麻烦,需要先解析JSON,然后再更新。(如之前发生的手机号转换,zipcode转换地址等)</li>
+</ol>
+<h3 id="使用建议">使用建议??</h3>
+<p>作为一些不必要查询，修改的复杂数据结构，使用JSON，可以存储更多的内容,也可以避免使用新的关联表来存储数据,减少数据库的耦合性,提高开发效率</p>
+<p>但是一涉及到数据的查询和修改，都需要注意JSON的性能问题, 没有索引使用JSON相关的处理函数会导致全表扫描数据,导致性能下降,而使用了JSON相关的索引,则需要维护数据的的结构和类型，避免出现数据类型不一致的情况</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MySQL/" class="print-no-link">#MySQL</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MySQL MyISAM</div>
+      <div>https://maocat.cc/2020/04/20/中间件/MySQL/json/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年4月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/MyISAM/" title="MySQL MyISAM">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL MyISAM</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E4%BA%8B%E5%8A%A1/" title="MySQL 事务">
+                        <span class="hidden-mobile">MySQL 事务</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a target="_blank" href="https://beian.miit.gov.cn/" rel="nofollow noopener noopener"><span>陕ICP备19007981号-3</span></a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

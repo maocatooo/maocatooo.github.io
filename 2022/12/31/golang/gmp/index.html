@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/icons8-pet-commands-train-50.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Go 语言的协程 goroutine Go 为了提供更容易使用的并发方法, 使用了 goroutine 和 channel。goroutine 来自协程的概念, 让一组可复用的函数运行在一组线程之上, 即使有协程阻塞, 该线程的其他协程也可以被 runtime 调度, 转移到其他可运行的线程上。最关键的是, 程序员看不到这些底层的细节, 这就降低了编程的难度, 提供了更容易的并发。 Go 中, 协">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GMP">
+<meta property="og:url" content="https://maocat.cc/2022/12/31/golang/gmp/index.html">
+<meta property="og:site_name" content="快乐笔记">
+<meta property="og:description" content="Go 语言的协程 goroutine Go 为了提供更容易使用的并发方法, 使用了 goroutine 和 channel。goroutine 来自协程的概念, 让一组可复用的函数运行在一组线程之上, 即使有协程阻塞, 该线程的其他协程也可以被 runtime 调度, 转移到其他可运行的线程上。最关键的是, 程序员看不到这些底层的细节, 这就降低了编程的难度, 提供了更容易的并发。 Go 中, 协">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://maocat.cc/asset/golang/images/GMP.png">
+<meta property="article:published_time" content="2022-12-31T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-26T06:41:06.747Z">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maocat.cc/asset/golang/images/GMP.png">
+  
+  
+  
+  <title>GMP - 快乐笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"maocat.cc","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>MaoCAT</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/maocatooo">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="GMP"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-31 00:00" pubdate>
+          2022年12月31日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">GMP</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Go 语言的协程 goroutine<br>
+Go 为了提供更容易使用的并发方法, 使用了 goroutine 和 channel。goroutine 来自协程的概念, 让一组可复用的函数运行在一组线程之上, 即使有协程阻塞, 该线程的其他协程也可以被 runtime 调度, 转移到其他可运行的线程上。最关键的是, 程序员看不到这些底层的细节, 这就降低了编程的难度, 提供了更容易的并发。</p>
+<p>Go 中, 协程被称为 goroutine, 它非常轻量, 一个 goroutine 只占几 KB, 并且这几 KB 就足够 goroutine 运行完, 这就能在有限的内存空间内支持大量 goroutine, 支持了更多的并发。虽然一个 goroutine 的栈只占几 KB, 但实际是可伸缩的, 如果需要更多内容, runtime 会自动为 goroutine 分配。</p>
+<p>Goroutine 特点：</p>
+<p>占用内存更小（几 kb）<br>
+调度更灵活 (runtime 调度)</p>
+<p>goroutine 基于GMP调度模型完成</p>
+<h3 id="设计原理">设计原理</h3>
+<h4 id="单线程调度器-0-x">单线程调度器 0.x</h4>
+<p>调度器只包含表示 Goroutine 的 G(协程) 和表示线程的 M(线程) 两种结构, 全局也只有一个线程</p>
+<h4 id="多线程调度器-1-0">多线程调度器 1.0</h4>
+<p>多线程调度器引入了 GOMAXPROCS 变量帮助我们灵活控制程序中的最大处理器数, 即活跃线程数</p>
+<h4 id="任务窃取调度器-1-1">任务窃取调度器 1.1</h4>
+<p>在多线程调度器上进行改进</p>
+<ul>
+<li>在当前的 G-M 模型中引入了处理器 P, 增加中间层</li>
+<li>在处理器 P 的基础上实现基于工作窃取的调度器</li>
+</ul>
+<h4 id="抢占式调度器-·-1-2-至今">抢占式调度器 · 1.2 ~ 至今</h4>
+<ul>
+<li>基于协作的抢占式调度器 - 1.2 ~ 1.13
+<ul>
+<li>通过编译器在函数调用时插入抢占检查指令, 在函数调用时检查当前 Goroutine 是否发起了抢占请求, 实现基于协作的抢占式调度；</li>
+<li>Goroutine 可能会因为垃圾回收和循环长时间占用资源导致程序暂停；</li>
+</ul>
+</li>
+<li>基于信号的抢占式调度器 - 1.14 ~ 至今
+<ul>
+<li>实现<strong>基于信号的真抢占式调度</strong>；</li>
+<li>垃圾回收在扫描栈时会触发抢占调度；</li>
+<li>抢占的时间点不够多, 还不能覆盖全部的边缘情况；</li>
+</ul>
+</li>
+</ul>
+<p>对 Go 语言并发模型的修改提升了调度器的性能, 但是 1.1 版本中的调度器仍然不支持抢占式调度, 程序只能依靠 Goroutine 主动让出 CPU 资源才能触发调度</p>
+<h5 id="基于协作的抢占式调度器">基于协作的抢占式调度器</h5>
+<p>Go 语言的调度器在 1.2 版本中引入基于协作的抢占式调度解决下面的问题：</p>
+<ul>
+<li>某些 Goroutine 可以长时间占用线程, 造成其它 Goroutine 的饥饿</li>
+<li>垃圾回收需要暂停整个程序（Stop-the-world, STW）, 最长可能需要几分钟的时间, 导致整个程序无法工作</li>
+</ul>
+<p>1.2 版本的抢占式调度虽然能够缓解这个问题, 但是它实现的抢占式调度是基于协作的, 在之后很长的一段时间里 Go 语言的调度器都有一些无法被抢占的边缘情况, 例如：for 循环或者垃圾回收长时间占用线程, 这些问题中的一部分直到 1.14 才被基于信号的抢占式调度解决</p>
+<h5 id="基于信号的抢占式调度器">基于信号的抢占式调度器</h5>
+<p>Go 语言在 1.14 版本中实现了非协作的抢占式调度, 在实现的过程中我们重构已有的逻辑并为 Goroutine 增加新的状态和字段来支持抢占。Go 团队通过下面的一系列提交实现了这一功能, 我们可以按时间顺序分析相关提交理解它的工作原理</p>
+<h2 id="调度器的-GMP-模型">调度器的 GMP 模型</h2>
+<p><img src="/asset/golang/images/GMP.png" srcset="/img/loading.gif" lazyload alt="gmp"></p>
+<p>Processor,虚拟处理器，M和G所需要的资源的上下文， 程序启动时创建, 最大 GOMAXPROCS 可以设置数量,  它包含了运行 goroutine 的资源, 如果M想运行 goroutine, 必须先获取 P, P 中还包含了可运行的 G 队列（最大256个）,</p>
+<p>M , golang 对系统线程的封装, 真正执行代码必须要有线程, 操作系统分配到应用程序的内核线程数, 默认最大量10000个, 如果有M阻塞, 会创建一个新的M, 如果M空闲, M会被回收或者睡眠</p>
+<p>新创建的G优先放在P的等待队列中, 如果G满了, 放入到全局的等待队列中</p>
+<p>G的状态</p>
+<pre><code class="hljs">- 空闲中 _Gidle	刚刚被分配并且还没有被初始化
+- 等待运行 _Grunnable 没有执行代码，没有栈的所有权，存储在运行队列中
+- 运行中 _Grunning 可以执行代码，拥有栈的所有权，被赋予了内核线程 M 和处理器 P
+- 系统调用中 _Gsyscall 正在执行系统调用，拥有栈的所有权，没有执行用户代码，被赋予了内核线程 M 但是不在运行队列上
+- 等待中 _Gwaiting 由于运行时而被阻塞，没有执行用    _Gpreempted	由于抢占而被阻塞，没有执行用户代码并且不在运行队列上，等待唤醒
+- 户代码并且不在运行队列上，但是可能存在于 Channel 的等待队列上
+- 已终止 _Gdead	没有被使用，没有执行代码，可能有分配的栈
+- _Gcopystack	栈正在被拷贝，没有执行代码，不在运行队列上
+</code></pre>
+<h3 id="调度策略">调度策略</h3>
+<ul>
+<li>
+<p>复用线程</p>
+<ul>
+<li>
+<p>work-stealing</p>
+<p>当前处理器本地的运行队列中不包含 G 时, 调用会触发工作窃取, 则去全局队列偷取一部分G，如果全局队列也是空的，则去其他的P中偷取一部分G</p>
+<p>处理器持有一个由可运行的 Goroutine 组成的环形的运行队列 runq, 还反向持有一个线程。调度器在调度时会从处理器的队列中选择队列头的 Goroutine 放到线程 M 上执行</p>
+<p>基于工作窃取的多线程调度器将每一个线程绑定到了独立的 CPU 上, 这些线程会被不同处理器管理, 不同的处理器通过工作窃取对任务进行再分配实现任务的平衡, 也能提升调度器和 Go 语言程序的整体性能, 今天所有的 Go 语言服务都受益于这一改动</p>
+</li>
+<li>
+<p>hand off</p>
+<p>当M处理的G,G处于阻塞时,M释放绑定的P，把P转移给其他空闲的M执行</p>
+</li>
+</ul>
+</li>
+<li>
+<p>利用并行</p>
+<p>GOMAXPROCS 设置P的数据，最多有GOMAXPROCS个线程分布在多个CPU执行</p>
+</li>
+<li>
+<p>抢占<br>
+一个Goroutine 最多占用CPU 10ms,防止其他 Goroutine 饿死</p>
+</li>
+<li>
+<p>全局 G 队列<br>
+当 M 执行 work-stealing 会获取全局队列的G</p>
+</li>
+</ul>
+<h3 id="go-func-执行流程">go func() 执行流程</h3>
+<ol>
+<li>go func() 创建G，加入到 P 队列中</li>
+<li>G只能在M中执行，M必须持有一个P，M与P是1:1的关系，M从P中取出G来执行</li>
+<li>一个M调度G执行是一个循环机制(调度-&gt;执行-&gt;销毁-&gt;返回-&gt;调度)</li>
+<li>如果G发生syscall或者阻塞，M会阻塞，如果当前有一些G在执行，runtime会把这个M从P中摘除（detach），重新创建或者拿取一个空闲线程用来服务P</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Golang/" class="print-no-link">#Golang</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GMP</div>
+      <div>https://maocat.cc/2022/12/31/golang/gmp/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月31日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/01/01/%E5%9F%BA%E7%A1%80/coding%E6%89%8B%E5%86%8C/" title="coding手册">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">coding手册</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/12/30/golang/channel/" title="Golang Channel">
+                        <span class="hidden-mobile">Golang Channel</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a target="_blank" href="https://beian.miit.gov.cn/" rel="nofollow noopener noopener"><span>陕ICP备19007981号-3</span></a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
