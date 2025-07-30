@@ -211,48 +211,6 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2025/01/21/blog/python/pdf_merge/" target="_self">
-          使用python把多个pdf合并为一个pdf文件
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/21/blog/python/pdf_merge/" target="_self">
-        <div>
-          安装PyPDF2 1pip install PyPDF2 合并pdf文件 1234567891011121314151617181920from PyPDF2 import PdfMergerdef merge_pdfs(pdf_list, output_file):    merger = PdfMerger()    try:        for pdf in pdf_list:
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-01-21 00:00" pubdate>
-              2025-01-21
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/PDF/">#PDF</a>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
         <a href="/2025/01/19/blog/article/interesting_character/" target="_self">
           开发中遇到的一些有意思的字符
         </a>
@@ -261,7 +219,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2025/01/19/blog/article/interesting_character/" target="_self">
         <div>
-          1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中, 12json.dumps(&quot;Φφ&quot;)&#x27;&quot;\\u03a6\u03c6&quot;&#x27; 2. len(“ｻﾞ”) == 2
+          1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中,这两个字符相同，原因：“Φ”.lower()==“φ” 12json.dumps(&quot;Φφ&quot;)&#x27;&quot;\\u03a6\u03c6&quot;&#x27; 2. len(“ｻﾞ”) == 2 日语中有一些字符看着是一个字，是因为它是两个 Unicode 码点（半角假名+浊音符号）
         </div>
       </a>
 
@@ -280,6 +238,48 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E6%80%9D%E8%80%83/">#思考</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/01/19/blog/python/pdf_merge/" target="_self">
+          使用python把多个pdf合并为一个pdf文件
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/19/blog/python/pdf_merge/" target="_self">
+        <div>
+          安装PyPDF2 1pip install PyPDF2 合并pdf文件 1234567891011121314151617181920from PyPDF2 import PdfMergerdef merge_pdfs(pdf_list, output_file):    merger = PdfMerger()    try:        for pdf in pdf_list:
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-01-19 00:00" pubdate>
+              2025-01-19
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/PDF/">#PDF</a>
+            
+              <a href="/tags/Python/">#Python</a>
             
           </div>
         

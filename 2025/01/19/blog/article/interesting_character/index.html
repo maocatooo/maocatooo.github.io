@@ -16,15 +16,15 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中, 12json.dumps(&quot;Φφ&quot;)&amp;#x27;&quot;\\u03a6\u03c6&quot;&amp;#x27; 2. len(“ｻﾞ”) &#x3D;&#x3D; 2">
+    <meta name="description" content="1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中,这两个字符相同，原因：“Φ”.lower()&#x3D;&#x3D;“φ” 12json.dumps(&quot;Φφ&quot;)&amp;#x27;&quot;\\u03a6\u03c6&quot;&amp;#x27; 2. len(“ｻﾞ”) &#x3D;&#x3D; 2 日语中有一些字符看着是一个字，是因为它是两个 Unicode 码点（半角假名+浊音符号）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="开发中遇到的一些有意思的字符">
 <meta property="og:url" content="https://maocat.cc/2025/01/19/blog/article/interesting_character/index.html">
 <meta property="og:site_name" content="快乐笔记">
-<meta property="og:description" content="1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中, 12json.dumps(&quot;Φφ&quot;)&amp;#x27;&quot;\\u03a6\u03c6&quot;&amp;#x27; 2. len(“ｻﾞ”) &#x3D;&#x3D; 2">
+<meta property="og:description" content="1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中,这两个字符相同，原因：“Φ”.lower()&#x3D;&#x3D;“φ” 12json.dumps(&quot;Φφ&quot;)&amp;#x27;&quot;\\u03a6\u03c6&quot;&amp;#x27; 2. len(“ｻﾞ”) &#x3D;&#x3D; 2 日语中有一些字符看着是一个字，是因为它是两个 Unicode 码点（半角假名+浊音符号）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-01-19T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-07-30T06:40:02.703Z">
+<meta property="article:modified_time" content="2025-07-30T06:43:28.579Z">
 <meta property="article:tag" content="思考">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -207,7 +207,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          105 字
+          174 字
         
       </span>
     
@@ -218,7 +218,7 @@
         
         
         
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -261,9 +261,10 @@
               <div class="markdown-body">
                 
                 <h2 id="1-“Φφ”-这两个字符竟然’相同’">1. “Φφ” 这两个字符竟然’相同’</h2>
-<p>在文本查找工具中,</p>
+<p>在文本查找工具中,这两个字符相同，原因：“Φ”.lower()==“φ”</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">json.dumps(<span class="hljs-string">&quot;Φφ&quot;</span>)<br><span class="hljs-string">&#x27;&quot;\\u03a6\u03c6&quot;&#x27;</span><br></code></pre></td></tr></table></figure>
 <h2 id="2-len-“ｻﾞ”-2">2. len(“ｻﾞ”) == 2</h2>
+<p>日语中有一些字符看着是一个字，是因为它是两个 Unicode 码点（半角假名+浊音符号）</p>
 
                 
               </div>
@@ -328,18 +329,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/21/blog/python/pdf_merge/" title="使用python把多个pdf合并为一个pdf文件">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用python把多个pdf合并为一个pdf文件</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/10/30/Python/DockerPrintNotData/" title="Python print() 在 Docker 不输出">
-                        <span class="hidden-mobile">Python print() 在 Docker 不输出</span>
+                      <a href="/2025/01/19/blog/python/pdf_merge/" title="使用python把多个pdf合并为一个pdf文件">
+                        <span class="hidden-mobile">使用python把多个pdf合并为一个pdf文件</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
