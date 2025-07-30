@@ -211,6 +211,88 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2023/07/06/blog/article/rpc_meta_header/" target="_self">
+          避坑之 grpc metadata 不能存入非 ASCll 字符
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/06/blog/article/rpc_meta_header/" target="_self">
+        <div>
+          grpc metadata 不能存入非 ASCll 字符 1rpc error: code = Internal desc = header key &quot;user_name&quot; contains value with non-printable ASCll characters 项目中进行 rpc 调用的时候出现这个问题,问题很容易追踪, 就是在 metadata.AppendTo
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-07-06 00:00" pubdate>
+              2023-07-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+              <a href="/tags/gRPC/">#gRPC</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/06/13/blog/article/the_pay/" target="_self">
+          一次重复支付引发的思考
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/13/blog/article/the_pay/" target="_self">
+        <div>
+          如何避免订单重复提交和重复支付, 在网上一些文章视频都很好的讲出怎么避免此类问题 然而重复支付真正发生在自己身上, 却还是焦头烂额  复盘  6月10日13点22分, 业务方反馈支付系统对人员自动打款没有到账, 让排查问题 13点36分, 我反馈支付服务压根没有收到支付请求, 产品让业务服务手动把支付状态改为支付失败, 这样可以在页面上手动支付 13点36分-13点44分, 业务服务修改支付状态后
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-06-13 00:00" pubdate>
+              2023-06-13
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%80%9D%E8%80%83/">#思考</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2023/05/13/blog/article/the_bitwarden/" target="_self">
           使用 Bitwarden_RS 构建属于自己的密码管理器
         </a>
@@ -515,86 +597,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2023-01-06 00:00" pubdate>
               2023-01-06
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/01/05/golang/slice/" target="_self">
-          Golang slice
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/01/05/golang/slice/" target="_self">
-        <div>
-          数组 数组是由相同类型元素的集合组成的数据结构, 计算机会为数组分配一块连续的内存来保存其中的元素 数组是定长的, 必须指定长度或满足编译器对数组大小的推导 1234arr1 := [3]int&#123;1, 2, 3&#125;arr2 := [...]int&#123;1, 2, 3&#125; 切片 切片类型的声明方式与数组有一些相似, 不过由于切片的长度是动态的, 所以声明时只需要指定切
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-01-05 00:00" pubdate>
-              2023-01-05
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/01/03/golang/mutex/" target="_self">
-          Golang mutex
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/01/03/golang/mutex/" target="_self">
-        <div>
-          参考 ： https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-sync-primitives https://www.bilibili.com/video/BV1hv411x7we mutex sync.Mutex 由两个字段 state 和 sema 组成。其中 state 表示当前互斥锁的状态, 而 se
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-01-03 00:00" pubdate>
-              2023-01-03
             </time>
           </div>
         

@@ -211,6 +211,88 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2022/06/26/blog/golang/go_micro_use_kafka/" target="_self">
+          微服务框架 go-micro 使用 Kafka 作为发布订阅的 Broker
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/06/26/blog/golang/go_micro_use_kafka/" target="_self">
+        <div>
+          微服务框架 go-micro 使用 Kafka 作为发布订阅的 Broker go-micro 默认使用http服务作为服务中的Broker 服务默认启动的时候  使用kafka启动  http服务作为服务中的Broker，有三个明显的缺点：   不能持久化存储   不能对未消费的数据，进行消费   每个需要发送消息的微服务都会启动一个 http Broker服务，可能会影响服务器性能   bro
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-06-26 00:00" pubdate>
+              2022-06-26
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/go-micro/">#go-micro</a>
+            
+              <a href="/tags/Kafka/">#Kafka</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/04/06/blog/article/bug_for_the_server_date/" target="_self">
+          服务器时间导致服务崩溃
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/04/06/blog/article/bug_for_the_server_date/" target="_self">
+        <div>
+          服务器时间导致服务崩溃 测试反馈最近版本发布完,内网演示环境服务测试的时候,服务卡顿明细,让我找找问题 爬到服务器上一看,数据库负载到了20多 top + iostat 一看, 好家伙, 磁盘IO拉满了 假装分析一波发现 mongodump 这个进程在 top 中排第一位, 原来是在备份数据啊,忙问了一下领导, 回复说没有进行数据备份 仔细想了一下 crontab 里面有定时数据库备份的任务,凌晨
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-04-06 14:26" pubdate>
+              2022-04-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%80%9D%E8%80%83/">#思考</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2022/03/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka/" target="_self">
           Kafka 消息队列
         </a>
@@ -526,86 +608,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2021/04/22/blog/golang/%E5%8F%91%E5%B8%83%E8%87%AA%E5%B7%B1go%E5%8C%85/" target="_self">
-          发布自己 golang package
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2021/04/22/blog/golang/%E5%8F%91%E5%B8%83%E8%87%AA%E5%B7%B1go%E5%8C%85/" target="_self">
-        <div>
-          发布自己 golang package (1) 代码提交到自己的github项目库 并且上tag 例如: github.com/maocatooo/thin    12git tag v0.0.1git push origin v0.0.1 (2) 告诉golang 代理服务器更新其索引   访问 https://pkg.go.dev/github.com/maocatooo/thin 提交自己项
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-04-22 00:00" pubdate>
-              2021-04-22
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" target="_self">
-          操作系统一些概念
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" target="_self">
-        <div>
-          进程与线程的区别 做个简单的比喻：进程=火车, 线程=车厢  线程在进程下行进（单纯的车厢无法运行） 一个进程可以包含多个线程（一辆火车可以有多个车厢） 不同进程间数据很难共享（一辆火车上的乘客很难换到另外一辆火车, 比如站点换乘） 同一进程下不同线程间数据很易共享（A车厢换到B车厢很容易） 进程要比线程消耗更多的计算机资源（采用多列火车相比多个车厢更耗资源） 进程间不会相互影响, 一个线程挂掉将
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-04-22 00:00" pubdate>
-              2020-04-22
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">#操作系统</a>
             
           </div>
         

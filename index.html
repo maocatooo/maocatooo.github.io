@@ -211,6 +211,88 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2025/01/21/blog/python/pdf_merge/" target="_self">
+          使用python把多个pdf合并为一个pdf文件
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/21/blog/python/pdf_merge/" target="_self">
+        <div>
+          安装PyPDF2 1pip install PyPDF2 合并pdf文件 1234567891011121314151617181920from PyPDF2 import PdfMergerdef merge_pdfs(pdf_list, output_file):    merger = PdfMerger()    try:        for pdf in pdf_list:
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-01-21 00:00" pubdate>
+              2025-01-21
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/PDF/">#PDF</a>
+            
+              <a href="/tags/Python/">#Python</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/01/19/blog/article/interesting_character/" target="_self">
+          开发中遇到的一些有意思的字符
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/19/blog/article/interesting_character/" target="_self">
+        <div>
+          1. “Φφ” 这两个字符竟然’相同’ 在文本查找工具中, 12json.dumps(&quot;Φφ&quot;)&#x27;&quot;\\u03a6\u03c6&quot;&#x27; 2. len(“ｻﾞ”) == 2
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-01-19 00:00" pubdate>
+              2025-01-19
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%80%9D%E8%80%83/">#思考</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/10/30/Python/DockerPrintNotData/" target="_self">
           Python print() 在 Docker 不输出
         </a>
@@ -519,88 +601,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2023-07-13 00:00" pubdate>
               2023-07-13
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%80%9D%E8%80%83/">#思考</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/07/06/blog/article/rpc_meta_header/" target="_self">
-          避坑之 grpc metadata 不能存入非 ASCll 字符
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/06/blog/article/rpc_meta_header/" target="_self">
-        <div>
-          grpc metadata 不能存入非 ASCll 字符 1rpc error: code = Internal desc = header key &quot;user_name&quot; contains value with non-printable ASCll characters 项目中进行 rpc 调用的时候出现这个问题,问题很容易追踪, 就是在 metadata.AppendTo
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-06 00:00" pubdate>
-              2023-07-06
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-              <a href="/tags/gRPC/">#gRPC</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/06/13/blog/article/the_pay/" target="_self">
-          一次重复支付引发的思考
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/13/blog/article/the_pay/" target="_self">
-        <div>
-          如何避免订单重复提交和重复支付, 在网上一些文章视频都很好的讲出怎么避免此类问题 然而重复支付真正发生在自己身上, 却还是焦头烂额  复盘  6月10日13点22分, 业务方反馈支付系统对人员自动打款没有到账, 让排查问题 13点36分, 我反馈支付服务压根没有收到支付请求, 产品让业务服务手动把支付状态改为支付失败, 这样可以在页面上手动支付 13点36分-13点44分, 业务服务修改支付状态后
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-06-13 00:00" pubdate>
-              2023-06-13
             </time>
           </div>
         
