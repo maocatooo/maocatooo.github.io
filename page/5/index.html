@@ -211,6 +211,46 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2021/07/06/blog/golang/error_init_slice/" target="_self">
+          Golang 错误的初始化 Slice, 痛痛痛
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2021/07/06/blog/golang/error_init_slice/" target="_self">
+        <div>
+          错误的初始化 Slice, 痛痛痛 先上代码 1234567891011121314151617181920212223242526package mainimport &quot;fmt&quot;func main() &#123;	s := []string&#123;&quot;A&quot;, &quot;B&quot;, &quot;C&quot;&#125;	ns1 := newSl
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-07-06 00:00" pubdate>
+              2021-07-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2021/04/22/blog/golang/%E5%8F%91%E5%B8%83%E8%87%AA%E5%B7%B1go%E5%8C%85/" target="_self">
           发布自己 golang package
         </a>
@@ -540,46 +580,6 @@
       <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/MyISAM/" target="_self">
         <div>
           InnoDB 和 MyISAM 的锁 MyISAM 只支持表锁 MyISAM 在 SELECT 的时候会自动给表加上读锁, 在执行 UPDATE, DELETE, INSERT 的时候会自动给涉及的表加上写锁, 在操作完成是会释放锁。 当前会话(线程)对表加上读锁, 必须解锁后才能操作其他表, 对其他会话无影响 123456789101112对 MyISAM 显示加锁# 读锁lock table
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-04-20 00:00" pubdate>
-              2020-04-20
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/MySQL/">#MySQL</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/json/" target="_self">
-          MySQL MyISAM
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/json/" target="_self">
-        <div>
-          JSON数据在不同字段的处理方式：     大小 字符集 校验 索引 备注     varchar(N) N 表的字符集 长度限制,字符集,排序规则 普通索引，唯一索引 表总和不能超过65535个字符(除去text,JSON, blob类型)   text 65535个字符 表的字符集 长度限制,字符集,排序规则 普通索引,全文索引    JSON 64MB(默认, 可修改) utf8mb4 大小
         </div>
       </a>
 
