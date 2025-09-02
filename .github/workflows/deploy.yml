@@ -30,6 +30,12 @@ jobs:
         run: npm run build  # 假设你使用 npm 构建项目
         working-directory: ./hexo/blog
 
+      - name: Get existing CNAME file
+        run: |
+          if [ -f CNAME ]; then
+            cp CNAME ./hexo/blog/public/CNAME
+          fi
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
