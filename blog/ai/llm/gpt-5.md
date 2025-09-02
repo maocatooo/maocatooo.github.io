@@ -1,8 +1,10 @@
 ---
 title: 服务器时间导致服务崩溃
-date: 2022-08-11 18:15:42
+date: 2025-08-11 18:15:42
 tags: [GPT5,OPENAI,LLM]
 ---
+
+
 ### gpt-5:  
 https://platform.openai.com/docs/guides/latest-model?reasoning-effort-mode=responses#prompting-guidance
 https://cookbook.openai.com/examples/gpt-5/gpt-5_new_params_and_tools#4-minimal-reasoning
