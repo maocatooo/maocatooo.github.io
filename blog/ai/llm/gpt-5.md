@@ -1,5 +1,5 @@
 ---
-title: 服务器时间导致服务崩溃
+title: GPT-5 新特性与应用
 date: 2025-08-11 18:15:42
 tags: [GPT5,OPENAI,LLM]
 ---
