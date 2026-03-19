@@ -211,6 +211,46 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2022/09/06/blog/golang/golang_time_cpu/" target="_self">
+          Golang 定时器 cpu 使用率过高的问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/09/06/blog/golang/golang_time_cpu/" target="_self">
+        <div>
+          早上打开电脑摸鱼的时候发现公司的测试环境的一个微服务CPU单核占用率到了99%,因为是核心服务,一直以为是处理业务逻辑的原因, 下午的时候就飙到了199%,而且很稳定的维持中,发现不对劲,去其他环境一看,果然这个服务的CPU占用率都不正常, 很可惜没有对这个服务开启pprof,找不到具体原因, 看看代码, 很顺利找到原因 看到代码时立马想到了当年看过群主的这篇blog 原因还是锁抢占的问题 dem
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-09-06 00:00" pubdate>
+              2022-09-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Golang/">#Golang</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2022/08/04/PDF/pdf/" target="_self">
           PDF
         </a>
@@ -548,46 +588,6 @@
       <a class="index-excerpt index-excerpt__noimg" href="/2022/01/01/K8S/install/" target="_self">
         <div>
           kubeadm 安装 K8s 关闭防火墙： 1234systemctl stop firewalldsystemctl disable firewall 关闭 selinux： 12sed -i &#x27;s/enforcing/disabled/&#x27; /etc/selinux/config # 永久setenforce 0 # 临时 关闭 swap： 12swapoff -a # 临时
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-01-01 00:00" pubdate>
-              2022-01-01
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/K8S/">#K8S</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2022/01/01/K8S/yaml/" target="_self">
-          K8S yaml
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/01/01/K8S/yaml/" target="_self">
-        <div>
-          1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677# yaml格式的pod定义文件完整内容：apiVersion: v1       #必选, 版本号, 例如v
         </div>
       </a>
 

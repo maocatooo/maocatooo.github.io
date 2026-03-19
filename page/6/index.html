@@ -211,15 +211,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/MyISAM/" target="_self">
-          MySQL MyISAM
+        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/InnoDB/" target="_self">
+          MySQL InnoDB
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/MyISAM/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/InnoDB/" target="_self">
         <div>
-          InnoDB 和 MyISAM 的锁 MyISAM 只支持表锁 MyISAM 在 SELECT 的时候会自动给表加上读锁, 在执行 UPDATE, DELETE, INSERT 的时候会自动给涉及的表加上写锁, 在操作完成是会释放锁。 当前会话(线程)对表加上读锁, 必须解锁后才能操作其他表, 对其他会话无影响 123456789101112对 MyISAM 显示加锁# 读锁lock table
+          行锁 InnoDB 的行锁模式她丝旦实现了以下两种类型的行锁 共享锁（ S ) ：又称为读锁, 简称 S 锁, 共享锁就是多个事务对于同一数据可以共享一把锁, 都能访问到数据, 但是只能读不能修改 排他锁（ X ) ：又称为写锁, 简称 X 锁, 排他锁就是不能与其他锁并存, 如一个事务获取了一个数据行的排他锁, 其他事务就不能再获取该行的其他锁, 包括共享锁和排他锁, 但是获取排他锁的事务是可以
         </div>
       </a>
 
@@ -251,15 +251,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E4%BA%8B%E5%8A%A1/" target="_self">
-          MySQL 事务
+        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/MyISAM/" target="_self">
+          MySQL MyISAM
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E4%BA%8B%E5%8A%A1/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/MyISAM/" target="_self">
         <div>
-          事务 MySQL 事务主要用于处理操作量大, 复杂度高的数据。比如说, 在人员管理系统中, 你删除一个人员, 你既需要删除人员的基本资料, 也要删除和该人员相关的信息, 如信箱, 文章等等, 这样, 这些数据库操作语句就构成一个事务！ 在 MySQL 中只有使用了 Innodb 数据库引擎的数据库或表才支持事务。 事务处理可以用来维护数据库的完整性, 保证成批的 SQL 语句要么全部执行, 要么全
+          InnoDB 和 MyISAM 的锁 MyISAM 只支持表锁 MyISAM 在 SELECT 的时候会自动给表加上读锁, 在执行 UPDATE, DELETE, INSERT 的时候会自动给涉及的表加上写锁, 在操作完成是会释放锁。 当前会话(线程)对表加上读锁, 必须解锁后才能操作其他表, 对其他会话无影响 123456789101112对 MyISAM 显示加锁# 读锁lock table
         </div>
       </a>
 
@@ -371,15 +371,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/" target="_self">
-          MySQL 日志
+        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E4%BA%8B%E5%8A%A1/" target="_self">
+          MySQL 事务
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E4%BA%8B%E5%8A%A1/" target="_self">
         <div>
-          错误日志 记录服务器启动, 运行相关发生的严重的错误信息 show variables like &quot;log_error%&quot;；  binlog 记录了所有DDL(数据定义语言)语句和DML(数据操作语言)语句, 但是不包括查询语句, 对容灾恢复, 主从复制有作用 默认不开启 需要在my.conf中配置 # 日志前缀 mysqlbin.00001 mysqlbin.00002 lo
+          事务 MySQL 事务主要用于处理操作量大, 复杂度高的数据。比如说, 在人员管理系统中, 你删除一个人员, 你既需要删除人员的基本资料, 也要删除和该人员相关的信息, 如信箱, 文章等等, 这样, 这些数据库操作语句就构成一个事务！ 在 MySQL 中只有使用了 Innodb 数据库引擎的数据库或表才支持事务。 事务处理可以用来维护数据库的完整性, 保证成批的 SQL 语句要么全部执行, 要么全
         </div>
       </a>
 
@@ -420,6 +420,46 @@
       <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E7%B4%A2%E5%BC%95/" target="_self">
         <div>
           聚簇索引与非聚簇索引b+树实现有什么区别 分为聚簇索引和非聚簇索引（有时也称辅助索引或二级索引） 聚簇是为了提高某个属性(或属性组)的查询速度, 把这个或这些属性(称为聚簇码)上具有相同值的元组集中存放在连续的物理块。 聚簇索引（clustered index）不是单独的一种索引类型, 而是一种数据存储方式。这种存储方式是依靠B+树来实现的, 根据表的主键构造一棵B+树且B+树叶子节点存放的都是表
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-20 00:00" pubdate>
+              2020-04-20
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MySQL/">#MySQL</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/" target="_self">
+          MySQL 日志
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/" target="_self">
+        <div>
+          错误日志 记录服务器启动, 运行相关发生的严重的错误信息 show variables like &quot;log_error%&quot;；  binlog 记录了所有DDL(数据定义语言)语句和DML(数据操作语言)语句, 但是不包括查询语句, 对容灾恢复, 主从复制有作用 默认不开启 需要在my.conf中配置 # 日志前缀 mysqlbin.00001 mysqlbin.00002 lo
         </div>
       </a>
 
@@ -500,46 +540,6 @@
       <a class="index-excerpt index-excerpt__noimg" href="/2020/04/15/Python/GIL/" target="_self">
         <div>
           GIL是什么？  GIL(全局解释器锁)是 Global Interpreter Lock 的缩写, 其作用是, 在Python使用多线程的时候, 所有的线程去抢一个锁, 抢到了锁的线程就可以获得CPU时间。 使用GIL的主要目的是为了简化Python解释器的实现（Python中的标准库里, 如无声明, 大部分库都不是并发安全的）, 而缺点就是无法充分的利用机器的多核 Python中如何使用多个C
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-04-15 00:00" pubdate>
-              2020-04-15
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/04/15/Python/%E4%B8%80%E4%BA%9B%E9%A2%98%E7%9B%AE/" target="_self">
-          Python 一些题目
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/15/Python/%E4%B8%80%E4%BA%9B%E9%A2%98%E7%9B%AE/" target="_self">
-        <div>
-          统计频次 小内存处理大文件 默认参数问题 变量作用域规则  统计频次 如何统计一篇文章中单词的出现次数？ 使用 Counter, 例如： 12345678910In [1]: a = &quot;hello world hello world world hello this that&quot;
         </div>
       </a>
 
