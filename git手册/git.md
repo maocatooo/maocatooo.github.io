@@ -55,6 +55,22 @@ git clone https://github.com/xxxxx/xxxxx2.git --config http.proxy=http://127.0.0
 git config --global --unset http.https://github.com.proxy
 ```
 
+### 给 git 配置全局代理
+```shell
+// 全局设置 socks5 代理
+git config --global http.proxy socks5://127.0.0.1:7890
+git config --global https.proxy socks5://127.0.0.1:7890
+
+// 取消全局代理
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
+
+### 单次命令临时走代理
+```shell
+git -c http.proxy=socks5://127.0.0.1:7890 pull
+```
+
 ### 保存登录状态
 ```shell
 git config --global credential.helper 'store'
