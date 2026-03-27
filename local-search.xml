@@ -4,6 +4,27 @@
   
   
   <entry>
+    <title>AI解决不了的问题之 graphrag 使用 openai sdk 出现 &quot;We could not parse the JSON body of your request&quot;</title>
+    <link href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/"/>
+    <url>/2026/03/27/blog/ai/rag/graphrag_openai_json_err/</url>
+    
+    <content type="html"><![CDATA[<p>参考资料：</p><p><a href="https://github.com/microsoft/graphrag/issues/2286">https://github.com/microsoft/graphrag/issues/2286</a><br><a href="https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372">https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372</a></p><p>最近被安排去调查 graphrag index 失败的问题</p><p>公司的一个产品在 rag 功能为客户提供了 graphrag 选项把用户数据通过 graphrag 去聚合</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">graphrag index --root  /data/xxx/xx<br></code></pre></td></tr></table></figure><p>然而在大量训练时，经常出现</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">openai.BadRequestError: Error code: 400 - &#123;&#x27;error&#x27;: &#123;&#x27;message&#x27;: &quot;We could not parse the JSON body of your request. (HINT: This likely means you aren&#x27;t using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)&quot;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: None&#125;&#125;<br></code></pre></td></tr></table></figure><p>问GPT, 一堆说什么调用不准确，上网一搜，都是有前因没结果的</p><p>训练错误的文件拿下来单独跑一下流程，又是好的</p><p>追了一下源代码，graphrag 底层还是用了 openai 官方的 sdk，所有的请求都是 openai sdk 自己发送出去的，也就是说他服务端自己不能理解自己的请求入参<br>一脸懵，没办法，只能自己改了</p><p>不侵入源码的情况下添加了两个改动项目，提升鲁棒性</p><ol><li>为 openai._base_client 添加 debug 日志，直接输出请求的入参，方便具体看到每次的入参情况</li><li>添加 graphrag 调用 openai sdk 时的重试情况，把 400 code 接入到重试里</li></ol><p>源graphrag cli代码</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br></code></pre></td></tr></table></figure><p>改动：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># training.py</span><br><span class="hljs-keyword">import</span> os.path<br><br><span class="hljs-keyword">from</span> fnllm.openai.llm.services.retryer <span class="hljs-keyword">import</span> OPENAI_RETRYABLE_ERRORS<br><span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> BadRequestError<br><br>OPENAI_RETRYABLE_ERRORS.append(BadRequestError)<br><br><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><span class="hljs-keyword">import</span> logging<br><br>logger = logging.getLogger(<span class="hljs-string">&quot;openai._base_client&quot;</span>)<br>logger.setLevel(logging.DEBUG)<br><br>OPENAI_BASE_CLIENT_LOG_DIR = <span class="hljs-string">&quot;/data/log&quot;</span><br><br><span class="hljs-keyword">if</span> OPENAI_BASE_CLIENT_LOG_DIR:<br>    os.makedirs(OPENAI_BASE_CLIENT_LOG_DIR, exist_ok=<span class="hljs-literal">True</span>)<br><br>file_handler = logging.FileHandler(os.path.join(OPENAI_BASE_CLIENT_LOG_DIR, <span class="hljs-string">&quot;openai_base_client.log&quot;</span>), encoding=<span class="hljs-string">&quot;utf-8&quot;</span>)<br>file_handler.setLevel(logging.DEBUG)<br><br>formatter = logging.Formatter(<br>    <span class="hljs-string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(message)s&quot;</span><br>)<br><br>file_handler.setFormatter(formatter)<br>logger.addHandler(file_handler)<br><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br><span class="hljs-comment"># python3.12 training.py index --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py query --method local --query  &quot;讲一下罗永浩和西贝发生的事&quot; --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py update --root /data/xxx/xxx</span><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>graphrag</tag>
+      
+      <tag>openai</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>大模型本身对代码，文档生成修改的影响</title>
     <link href="/2026/03/19/blog/ai/vbcode/TheImpactOfModelsOnCode/"/>
     <url>/2026/03/19/blog/ai/vbcode/TheImpactOfModelsOnCode/</url>
@@ -14,9 +35,9 @@
     
     <tags>
       
-      <tag>LLM</tag>
-      
       <tag>Qwen</tag>
+      
+      <tag>LLM</tag>
       
       <tag>vibe coding</tag>
       
@@ -60,11 +81,11 @@
     
     <tags>
       
+      <tag>LLM</tag>
+      
       <tag>GPT5</tag>
       
       <tag>OPENAI</tag>
-      
-      <tag>LLM</tag>
       
     </tags>
     
@@ -102,9 +123,9 @@
     
     <tags>
       
-      <tag>PDF</tag>
-      
       <tag>Python</tag>
+      
+      <tag>PDF</tag>
       
     </tags>
     
@@ -1093,11 +1114,11 @@
   
   
   <entry>
-    <title>MySQL 日志</title>
-    <link href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/"/>
-    <url>/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/</url>
+    <title>MySQL 索引</title>
+    <link href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E7%B4%A2%E5%BC%95/"/>
+    <url>/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E7%B4%A2%E5%BC%95/</url>
     
-    <content type="html"><![CDATA[<h3 id="错误日志">错误日志</h3><p>记录服务器启动, 运行相关发生的严重的错误信息</p><pre><code class="hljs">show variables like &quot;log_error%&quot;；</code></pre><h3 id="binlog">binlog</h3><p>记录了所有DDL(数据定义语言)语句和DML(数据操作语言)语句, 但是不包括查询语句, 对容灾恢复, 主从复制有作用</p><p>默认不开启</p><p>需要在my.conf中配置</p><pre><code class="hljs"># 日志前缀 mysqlbin.00001 mysqlbin.00002log_bin=mysqlbinbin_log_format=STATMENT</code></pre><h4 id="日志格式">日志格式</h4><h5 id="STATMENT">STATMENT</h5><p>记录的都是SQL(不包括查询)语句 通过 mysqlbinlog 工具可以解析出SQL语句</p><h5 id="ROW">ROW</h5><p>记录的都是每一行数据的变更而不是SQL语句</p><h5 id="MIXED">MIXED</h5><p>Mysql 默认的日志格式<br>集成了STATMENT, ROW, 默认情况下采用STATMENT,  特殊情况下采用ROW<br>尽量利用他们的有点, 避免其缺点</p><p>mysqlbinlog 工具可以查看二进制日志文件</p><p>STATMENT格式下就可以查看的执行的SQL语句</p><pre><code class="hljs">mysqlbinlog log-file</code></pre><p>ROW格式下就可以查看的执行的SQL变更情况</p><pre><code class="hljs">mysqlbinlog -vv log-file</code></pre><h4 id="清除日志">清除日志</h4><ol><li><p>删除全部binlog日志, 日志编号从xxx.000001开始</p><p>mysql&gt; Reset Master</p></li><li><p><code>mysql&gt; purge master logs to &quot;xxxx.00000x&quot;</code> 删除日志00000x之前的所有日志</p></li><li><p><code>mysql&gt; purge master logs before &quot;yyyy-mm-dd hh24:mi:ss&quot;</code> 删除日志yyyy-mm-dd hh24:mi:ss之前的所有日志</p></li><li><p>–expire_logs_days=xx,日志过期时间 在my.conf配置</p></li></ol><h3 id="查询日志">查询日志</h3><p>明文显示数据库查询日志</p><p><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/7.png" alt="avatar"></p><h3 id="慢查询日志">慢查询日志</h3><p>慢查询日志记录所有执行时间超过参数 long_query_time 设置值, 并且扫描记录不小于min_examined_wor_limit的所有的SQL语句的日志</p><p>long_query_time 默认是10s, 可以精确到微秒</p><p><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/8.png" alt="avatar"></p>]]></content>
+    <content type="html"><![CDATA[<h4 id="聚簇索引与非聚簇索引b-树实现有什么区别">聚簇索引与非聚簇索引b+树实现有什么区别</h4><p>分为聚簇索引和非聚簇索引（有时也称辅助索引或二级索引）</p><p>聚簇是为了提高某个属性(或属性组)的查询速度, 把这个或这些属性(称为聚簇码)上具有相同值的元组集中存放在连续的物理块。</p><p>聚簇索引（clustered index）不是单独的一种索引类型, 而是一种数据存储方式。这种存储方式是依靠B+树来实现的, 根据表的主键构造一棵B+树且B+树叶子节点存放的都是表的行记录数据时, 方可称该主键索引为聚簇索引<br>。聚簇索引也可理解为将数据存储与索引放到了一块, 找到索引也就找到了数据。</p><p>非聚簇索引：数据和索引是分开的, B+树叶子节点存放的不是数据表的行记录</p><p>虽然InnoDB和MyISAM存储引擎都默认使用B+树结构存储索引, 但是只有InnoDB的主键索引才是聚簇索引,  InnoDB中的辅助索引以及MyISAM使用的都是非聚簇索引。每张表最多只能拥有一个聚簇索引。</p><h4 id="逻辑分类">逻辑分类</h4><p>key：等价普通索引 key 键名 (列)</p><p>主键索引primary key：</p><ul><li>约束作用（constraint）, 主键约束（unique, not null, 一表一主键, 唯一标识记录）, 规范存储主键和强调唯一性<br>为这个key建立主键索引</li></ul><p>单值(普通)索引：一个索引只包含单个列, 一个表可以有多个单列索引</p><p>唯一索引：索引列的值必须唯一, 但允许有空值</p><p>复合索引：一个索引可以包含多个列</p><p>全文索引</p><p>最左前缀法则(联合索引)<br>指的是, 查询从索引的最左前列开始, 不得跳过索引中的列</p><p>和 where 后面的先后条件没有关系</p><pre><code class="hljs">1,2,3where 1=xxx and 2=xxx, 3=xxx, 只走1, 2, 3 的索引where 1=xxx and 3=xxx,  只走1, 的索引where 1=xxx and 2=xxx   只走1, 2的索引where 1=xxx             只走1, 的索引where 2=xxx and 3 =xxx  只走2, 3 的索引where 2=xxx             只走2, 的索引where 3=xxx             只走3, 的索引</code></pre><p>索引失效的情况</p><ol><li><p>范围查询右边的列, 不使用索引<br><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/9.png" alt="avatar"></p></li><li><p>不能在索引列上进行运算操作</p><p>例如 where substring(name, 3, 2) = “xxx” 即使创建了name的索引, 索引也会失效</p></li><li><p>字符串不加引号, 也会导致索引失效<br>where name = 1</p></li><li><p>尽量避开select(*), 尽量使用覆盖索引, 避免不必要的回表查询</p></li><li><p>用 or 前面的条件有索引, 后面的没有索引, 索引全部失效</p></li><li><p>以%开头的like 语句也会导致索引失效</p></li><li><p>如果使用索引比扫描全表更慢, 则不会走索引</p></li><li><p>数据量大小情况,  is NULL, is not NULL 也会导致索引失效</p></li><li><p>尽量使用复合索引, 少使用单列索引</p></li></ol><h4 id="数据结构">数据结构</h4><p>hash：是无序的值, 没有不能排序不能范围查找, 哈希冲突下, 需要比对, 会影响速度</p><p>平衡二叉树,  除叶子节点外, 其他节点必定是满的, 左子树, 右子树层级差不会超过1,  树越高查找速度越慢, 范围查找下, 回旋查找效率非常慢</p><p>B树</p><p>范围查找下, 回旋查找效率非常慢<br><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/10.png" alt="avatar"></p>]]></content>
     
     
     
@@ -1112,11 +1133,11 @@
   
   
   <entry>
-    <title>MySQL 索引</title>
-    <link href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E7%B4%A2%E5%BC%95/"/>
-    <url>/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E7%B4%A2%E5%BC%95/</url>
+    <title>MySQL 日志</title>
+    <link href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/"/>
+    <url>/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E6%97%A5%E5%BF%97/</url>
     
-    <content type="html"><![CDATA[<h4 id="聚簇索引与非聚簇索引b-树实现有什么区别">聚簇索引与非聚簇索引b+树实现有什么区别</h4><p>分为聚簇索引和非聚簇索引（有时也称辅助索引或二级索引）</p><p>聚簇是为了提高某个属性(或属性组)的查询速度, 把这个或这些属性(称为聚簇码)上具有相同值的元组集中存放在连续的物理块。</p><p>聚簇索引（clustered index）不是单独的一种索引类型, 而是一种数据存储方式。这种存储方式是依靠B+树来实现的, 根据表的主键构造一棵B+树且B+树叶子节点存放的都是表的行记录数据时, 方可称该主键索引为聚簇索引<br>。聚簇索引也可理解为将数据存储与索引放到了一块, 找到索引也就找到了数据。</p><p>非聚簇索引：数据和索引是分开的, B+树叶子节点存放的不是数据表的行记录</p><p>虽然InnoDB和MyISAM存储引擎都默认使用B+树结构存储索引, 但是只有InnoDB的主键索引才是聚簇索引,  InnoDB中的辅助索引以及MyISAM使用的都是非聚簇索引。每张表最多只能拥有一个聚簇索引。</p><h4 id="逻辑分类">逻辑分类</h4><p>key：等价普通索引 key 键名 (列)</p><p>主键索引primary key：</p><ul><li>约束作用（constraint）, 主键约束（unique, not null, 一表一主键, 唯一标识记录）, 规范存储主键和强调唯一性<br>为这个key建立主键索引</li></ul><p>单值(普通)索引：一个索引只包含单个列, 一个表可以有多个单列索引</p><p>唯一索引：索引列的值必须唯一, 但允许有空值</p><p>复合索引：一个索引可以包含多个列</p><p>全文索引</p><p>最左前缀法则(联合索引)<br>指的是, 查询从索引的最左前列开始, 不得跳过索引中的列</p><p>和 where 后面的先后条件没有关系</p><pre><code class="hljs">1,2,3where 1=xxx and 2=xxx, 3=xxx, 只走1, 2, 3 的索引where 1=xxx and 3=xxx,  只走1, 的索引where 1=xxx and 2=xxx   只走1, 2的索引where 1=xxx             只走1, 的索引where 2=xxx and 3 =xxx  只走2, 3 的索引where 2=xxx             只走2, 的索引where 3=xxx             只走3, 的索引</code></pre><p>索引失效的情况</p><ol><li><p>范围查询右边的列, 不使用索引<br><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/9.png" alt="avatar"></p></li><li><p>不能在索引列上进行运算操作</p><p>例如 where substring(name, 3, 2) = “xxx” 即使创建了name的索引, 索引也会失效</p></li><li><p>字符串不加引号, 也会导致索引失效<br>where name = 1</p></li><li><p>尽量避开select(*), 尽量使用覆盖索引, 避免不必要的回表查询</p></li><li><p>用 or 前面的条件有索引, 后面的没有索引, 索引全部失效</p></li><li><p>以%开头的like 语句也会导致索引失效</p></li><li><p>如果使用索引比扫描全表更慢, 则不会走索引</p></li><li><p>数据量大小情况,  is NULL, is not NULL 也会导致索引失效</p></li><li><p>尽量使用复合索引, 少使用单列索引</p></li></ol><h4 id="数据结构">数据结构</h4><p>hash：是无序的值, 没有不能排序不能范围查找, 哈希冲突下, 需要比对, 会影响速度</p><p>平衡二叉树,  除叶子节点外, 其他节点必定是满的, 左子树, 右子树层级差不会超过1,  树越高查找速度越慢, 范围查找下, 回旋查找效率非常慢</p><p>B树</p><p>范围查找下, 回旋查找效率非常慢<br><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/10.png" alt="avatar"></p>]]></content>
+    <content type="html"><![CDATA[<h3 id="错误日志">错误日志</h3><p>记录服务器启动, 运行相关发生的严重的错误信息</p><pre><code class="hljs">show variables like &quot;log_error%&quot;；</code></pre><h3 id="binlog">binlog</h3><p>记录了所有DDL(数据定义语言)语句和DML(数据操作语言)语句, 但是不包括查询语句, 对容灾恢复, 主从复制有作用</p><p>默认不开启</p><p>需要在my.conf中配置</p><pre><code class="hljs"># 日志前缀 mysqlbin.00001 mysqlbin.00002log_bin=mysqlbinbin_log_format=STATMENT</code></pre><h4 id="日志格式">日志格式</h4><h5 id="STATMENT">STATMENT</h5><p>记录的都是SQL(不包括查询)语句 通过 mysqlbinlog 工具可以解析出SQL语句</p><h5 id="ROW">ROW</h5><p>记录的都是每一行数据的变更而不是SQL语句</p><h5 id="MIXED">MIXED</h5><p>Mysql 默认的日志格式<br>集成了STATMENT, ROW, 默认情况下采用STATMENT,  特殊情况下采用ROW<br>尽量利用他们的有点, 避免其缺点</p><p>mysqlbinlog 工具可以查看二进制日志文件</p><p>STATMENT格式下就可以查看的执行的SQL语句</p><pre><code class="hljs">mysqlbinlog log-file</code></pre><p>ROW格式下就可以查看的执行的SQL变更情况</p><pre><code class="hljs">mysqlbinlog -vv log-file</code></pre><h4 id="清除日志">清除日志</h4><ol><li><p>删除全部binlog日志, 日志编号从xxx.000001开始</p><p>mysql&gt; Reset Master</p></li><li><p><code>mysql&gt; purge master logs to &quot;xxxx.00000x&quot;</code> 删除日志00000x之前的所有日志</p></li><li><p><code>mysql&gt; purge master logs before &quot;yyyy-mm-dd hh24:mi:ss&quot;</code> 删除日志yyyy-mm-dd hh24:mi:ss之前的所有日志</p></li><li><p>–expire_logs_days=xx,日志过期时间 在my.conf配置</p></li></ol><h3 id="查询日志">查询日志</h3><p>明文显示数据库查询日志</p><p><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/7.png" alt="avatar"></p><h3 id="慢查询日志">慢查询日志</h3><p>慢查询日志记录所有执行时间超过参数 long_query_time 设置值, 并且扫描记录不小于min_examined_wor_limit的所有的SQL语句的日志</p><p>long_query_time 默认是10s, 可以精确到微秒</p><p><img src="/asset/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/images/8.png" alt="avatar"></p>]]></content>
     
     
     
