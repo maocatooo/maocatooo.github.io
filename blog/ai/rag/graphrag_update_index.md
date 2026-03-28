@@ -1,80 +1,66 @@
 ---
-title: AI解决不了的问题之 graphrag 使用 openai sdk 出现 "We could not parse the JSON body of your request"
-date: 2026-03-27 17:45:42
-tags: [graphrag, openai]
+title: graphrag 1.2 增量训练文件  
+date: 2026-03-28 20:43:12
+tags: [graphrag]
 ---
 
-参考资料：
+## 注意
+**settings.yaml 不动，update_index_storage 放开会导致 index 时候出错，所以不能动**
 
-https://github.com/microsoft/graphrag/issues/2286   
-https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372 
+> 建议把训练目录和查询目录分开，保证在新训练时不影响旧数据，避免一些其他影响
 
-最近被安排去调查 graphrag index 失败的问题
+---
 
-公司的一个产品在 rag 功能为客户提供了 graphrag 选项把用户数据通过 graphrag 去聚合
-```shell
-graphrag index --root  /data/xxx/xx
+## 操作步骤
+
+### 1. 复制原有目录文件夹到训练文件夹
+```bash
+cp /data/gr_data_search/xxxx/xxx /data/gr_data/xxxx/xxx
+````
+
+---
+
+### 2. 增量训练
+
+**注意：**
+`settings.yaml` 中的 `title` 字段不能和之前已训练过的数据重复，否则会跳过数据
+
+```bash
+python3.12 training.py update --root /data/gr_data/xxxx/xxx
 ```
 
-然而在大量训练时，经常出现 
-```shell
-openai.BadRequestError: Error code: 400 - {'error': {'message': "We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)", 'type': 'invalid_request_error', 'param': None, 'code': None}}
-```
-问GPT, 一堆说什么调用不准确，上网一搜，都是有前因没结果的  
+训练完成后会生成新目录 `update_output`：
 
-训练错误的文件拿下来单独跑一下流程，又是好的
+* `update_output`：原始内容 + 增量内容
+* `update_output/delta`：仅增量内容
+* `lancedb` 目录：`output/lancedb` 已自动更新，无需操作
 
-追了一下源代码，graphrag 底层还是用了 openai 官方的 sdk，所有的请求都是 openai sdk 自己发送出去的，也就是说他服务端自己不能理解自己的请求入参  
-一脸懵，没办法，只能自己改了  
+---
 
-不侵入源码的情况下添加了两个改动项目，提升鲁棒性     
-1. 为 openai._base_client 添加 debug 日志，直接输出请求的入参，方便具体看到每次的入参情况
-2. 添加 graphrag 调用 openai sdk 时的重试情况，把 400 code 接入到重试里  
+### 3. 复制覆盖结构化数据
 
-源graphrag cli代码   
+```bash
+cp update_output/*.parquet output/
 
-```python
-from graphrag.cli.main import app
-
-app(prog_name="graphrag")
+# 删除临时目录
+rm -r update_output
 ```
 
-改动： 
-```python
-# training.py
-import os.path
+---
 
-from fnllm.openai.llm.services.retryer import OPENAI_RETRYABLE_ERRORS
-from openai import BadRequestError
+### 4. 新上传
 
-OPENAI_RETRYABLE_ERRORS.append(BadRequestError)
+---
 
-from graphrag.cli.main import app
-import logging
+### 5. 备注
 
-logger = logging.getLogger("openai._base_client")
-logger.setLevel(logging.DEBUG)
+* `index` 和 `update` 都会使用缓存数据 `cache`，建议在重新训练或 update 时复用，可以提速并节省成本
 
-OPENAI_BASE_CLIENT_LOG_DIR = "/data/log"
+* 删除文件只能通过重新 `index` 重建：
 
-if OPENAI_BASE_CLIENT_LOG_DIR:
-    os.makedirs(OPENAI_BASE_CLIENT_LOG_DIR, exist_ok=True)
-
-file_handler = logging.FileHandler(os.path.join(OPENAI_BASE_CLIENT_LOG_DIR, "openai_base_client.log"), encoding="utf-8")
-file_handler.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
-# """
-# python3.12 training.py index --root /data/xxx/xxx
-# python3.12 training.py query --method local --query  "讲一下罗永浩和西贝发生的事" --root /data/xxx/xxx
-# python3.12 training.py update --root /data/xxx/xxx
-# """
-app(prog_name="graphrag")
-
+```bash
+rm -r output
 ```
+
+> update 只负责增量添加，不支持删除 
+
