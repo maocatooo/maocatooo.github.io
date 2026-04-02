@@ -16,18 +16,22 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="快乐笔记">
-<meta property="og:url" content="https://maocat.cc/2026/03/27/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/SQL%E4%BC%98%E5%8C%96/index.html">
+    <meta name="description" content="参考资料： https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;graphrag&#x2F;issues&#x2F;2286 https:&#x2F;&#x2F;community.openai.com&#x2F;t&#x2F;solved-error-we-could-not-parse-the-json-body-of-your-request&#x2F;545372 最近被安排去调查 graphrag index 失败的问题 公司的一个产品在 rag 功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI解决不了的问题之 graphrag 使用 openai sdk 出现 &quot;We could not parse the JSON body of your request&quot;">
+<meta property="og:url" content="https://maocat.cc/2026/03/27/blog/ai/rag/graphrag_update_index/index.html">
 <meta property="og:site_name" content="快乐笔记">
+<meta property="og:description" content="参考资料： https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;graphrag&#x2F;issues&#x2F;2286 https:&#x2F;&#x2F;community.openai.com&#x2F;t&#x2F;solved-error-we-could-not-parse-the-json-body-of-your-request&#x2F;545372 最近被安排去调查 graphrag index 失败的问题 公司的一个产品在 rag 功">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-03-27T10:08:24.916Z">
-<meta property="article:modified_time" content="2026-03-27T10:08:24.916Z">
+<meta property="article:published_time" content="2026-03-27T17:45:42.000Z">
+<meta property="article:modified_time" content="2026-04-02T02:30:16.995Z">
+<meta property="article:tag" content="graphrag">
+<meta property="article:tag" content="openai">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>快乐笔记</title><meta name="robots" content="noindex">
+  <title>AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34; - 快乐笔记</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -181,7 +185,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;"></span>
           
         </div>
 
@@ -192,8 +196,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-03-27 10:08" pubdate>
-          2026年3月27日 上午
+        <time datetime="2026-03-27 17:45" pubdate>
+          2026年3月27日 下午
         </time>
       </span>
     
@@ -204,7 +208,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.2k 字
         
       </span>
     
@@ -215,7 +219,7 @@
         
         
         
-          1 分钟
+          19 分钟
         
       </span>
     
@@ -252,12 +256,32 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header"></h1>
+            <h1 id="seo-header">AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;</h1>
             
             
               <div class="markdown-body">
                 
-                <!-- flag of hidden posts -->
+                <p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/microsoft/graphrag/issues/2286">https://github.com/microsoft/graphrag/issues/2286</a><br>
+<a target="_blank" rel="noopener" href="https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372">https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372</a></p>
+<p>最近被安排去调查 graphrag index 失败的问题</p>
+<p>公司的一个产品在 rag 功能为客户提供了 graphrag 选项把用户数据通过 graphrag 去聚合</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">graphrag index --root  /data/xxx/xx<br></code></pre></td></tr></table></figure>
+<p>然而在大量训练时，经常出现</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">openai.BadRequestError: Error code: 400 - &#123;&#x27;error&#x27;: &#123;&#x27;message&#x27;: &quot;We could not parse the JSON body of your request. (HINT: This likely means you aren&#x27;t using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)&quot;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: None&#125;&#125;<br></code></pre></td></tr></table></figure>
+<p>问GPT, 一堆说什么调用不准确，上网一搜，都是有前因没结果的</p>
+<p>训练错误的文件拿下来单独跑一下流程，又是好的</p>
+<p>追了一下源代码，graphrag 底层还是用了 openai 官方的 sdk，所有的请求都是 openai sdk 自己发送出去的，也就是说他服务端自己不能理解自己的请求入参<br>
+一脸懵，没办法，只能自己改了</p>
+<p>不侵入源码的情况下添加了两个改动项目，提升鲁棒性</p>
+<ol>
+<li>为 openai._base_client 添加 debug 日志，直接输出请求的入参，方便具体看到每次的入参情况</li>
+<li>添加 graphrag 调用 openai sdk 时的重试情况，把 400 code 接入到重试里</li>
+</ol>
+<p>源graphrag cli代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>改动：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># training.py</span><br><span class="hljs-keyword">import</span> os.path<br><br><span class="hljs-keyword">from</span> fnllm.openai.llm.services.retryer <span class="hljs-keyword">import</span> OPENAI_RETRYABLE_ERRORS<br><span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> BadRequestError<br><br>OPENAI_RETRYABLE_ERRORS.append(BadRequestError)<br><br><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><span class="hljs-keyword">import</span> logging<br><br>logger = logging.getLogger(<span class="hljs-string">&quot;openai._base_client&quot;</span>)<br>logger.setLevel(logging.DEBUG)<br><br>OPENAI_BASE_CLIENT_LOG_DIR = <span class="hljs-string">&quot;/data/log&quot;</span><br><br><span class="hljs-keyword">if</span> OPENAI_BASE_CLIENT_LOG_DIR:<br>    os.makedirs(OPENAI_BASE_CLIENT_LOG_DIR, exist_ok=<span class="hljs-literal">True</span>)<br><br>file_handler = logging.FileHandler(os.path.join(OPENAI_BASE_CLIENT_LOG_DIR, <span class="hljs-string">&quot;openai_base_client.log&quot;</span>), encoding=<span class="hljs-string">&quot;utf-8&quot;</span>)<br>file_handler.setLevel(logging.DEBUG)<br><br>formatter = logging.Formatter(<br>    <span class="hljs-string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(message)s&quot;</span><br>)<br><br>file_handler.setFormatter(formatter)<br>logger.addHandler(file_handler)<br><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br><span class="hljs-comment"># python3.12 training.py index --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py query --method local --query  &quot;讲一下罗永浩和西贝发生的事&quot; --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py update --root /data/xxx/xxx</span><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br><br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -265,6 +289,15 @@
             <div>
               <div class="post-metas my-3">
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/graphrag/" class="print-no-link">#graphrag</a>
+      
+        <a href="/tags/openai/" class="print-no-link">#openai</a>
+      
+    </div>
   
 </div>
 
@@ -274,8 +307,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
-      <div>https://maocat.cc/2026/03/27/中间件/MySQL/SQL优化/</div>
+      <div>AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;</div>
+      <div>https://maocat.cc/2026/03/27/blog/ai/rag/graphrag_update_index/</div>
     </div>
     <div class="license-meta">
       
@@ -309,6 +342,29 @@
 
 
 
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/" title="AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/19/blog/ai/vbcode/TheImpactOfModelsOnCode/" title="大模型本身对代码，文档生成修改的影响">
+                        <span class="hidden-mobile">大模型本身对代码，文档生成修改的影响</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
