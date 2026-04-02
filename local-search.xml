@@ -4,19 +4,17 @@
   
   
   <entry>
-    <title>AI解决不了的问题之 graphrag 使用 openai sdk 出现 &quot;We could not parse the JSON body of your request&quot;</title>
-    <link href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/"/>
-    <url>/2026/03/27/blog/ai/rag/graphrag_openai_json_err/</url>
+    <title>graphrag 1.2 增量训练文件</title>
+    <link href="/2026/03/28/blog/ai/rag/graphrag_update_index/"/>
+    <url>/2026/03/28/blog/ai/rag/graphrag_update_index/</url>
     
-    <content type="html"><![CDATA[<p>参考资料：</p><p><a href="https://github.com/microsoft/graphrag/issues/2286">https://github.com/microsoft/graphrag/issues/2286</a><br><a href="https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372">https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372</a></p><p>最近被安排去调查 graphrag index 失败的问题</p><p>公司的一个产品在 rag 功能为客户提供了 graphrag 选项把用户数据通过 graphrag 去聚合</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">graphrag index --root  /data/xxx/xx<br></code></pre></td></tr></table></figure><p>然而在大量训练时，经常出现</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">openai.BadRequestError: Error code: 400 - &#123;&#x27;error&#x27;: &#123;&#x27;message&#x27;: &quot;We could not parse the JSON body of your request. (HINT: This likely means you aren&#x27;t using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)&quot;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: None&#125;&#125;<br></code></pre></td></tr></table></figure><p>问GPT, 一堆说什么调用不准确，上网一搜，都是有前因没结果的</p><p>训练错误的文件拿下来单独跑一下流程，又是好的</p><p>追了一下源代码，graphrag 底层还是用了 openai 官方的 sdk，所有的请求都是 openai sdk 自己发送出去的，也就是说他服务端自己不能理解自己的请求入参<br>一脸懵，没办法，只能自己改了</p><p>不侵入源码的情况下添加了两个改动项目，提升鲁棒性</p><ol><li>为 openai._base_client 添加 debug 日志，直接输出请求的入参，方便具体看到每次的入参情况</li><li>添加 graphrag 调用 openai sdk 时的重试情况，把 400 code 接入到重试里</li></ol><p>源graphrag cli代码</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br></code></pre></td></tr></table></figure><p>改动：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># training.py</span><br><span class="hljs-keyword">import</span> os.path<br><br><span class="hljs-keyword">from</span> fnllm.openai.llm.services.retryer <span class="hljs-keyword">import</span> OPENAI_RETRYABLE_ERRORS<br><span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> BadRequestError<br><br>OPENAI_RETRYABLE_ERRORS.append(BadRequestError)<br><br><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><span class="hljs-keyword">import</span> logging<br><br>logger = logging.getLogger(<span class="hljs-string">&quot;openai._base_client&quot;</span>)<br>logger.setLevel(logging.DEBUG)<br><br>OPENAI_BASE_CLIENT_LOG_DIR = <span class="hljs-string">&quot;/data/log&quot;</span><br><br><span class="hljs-keyword">if</span> OPENAI_BASE_CLIENT_LOG_DIR:<br>    os.makedirs(OPENAI_BASE_CLIENT_LOG_DIR, exist_ok=<span class="hljs-literal">True</span>)<br><br>file_handler = logging.FileHandler(os.path.join(OPENAI_BASE_CLIENT_LOG_DIR, <span class="hljs-string">&quot;openai_base_client.log&quot;</span>), encoding=<span class="hljs-string">&quot;utf-8&quot;</span>)<br>file_handler.setLevel(logging.DEBUG)<br><br>formatter = logging.Formatter(<br>    <span class="hljs-string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(message)s&quot;</span><br>)<br><br>file_handler.setFormatter(formatter)<br>logger.addHandler(file_handler)<br><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br><span class="hljs-comment"># python3.12 training.py index --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py query --method local --query  &quot;讲一下罗永浩和西贝发生的事&quot; --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py update --root /data/xxx/xxx</span><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br><br></code></pre></td></tr></table></figure>]]></content>
+    <content type="html"><![CDATA[<h2 id="注意">注意</h2><p><strong>settings.yaml 不动，update_index_storage 放开会导致 index 时候出错，所以不能动</strong></p><blockquote><p>建议把训练目录和查询目录分开，保证在新训练时不影响旧数据，避免一些其他影响</p></blockquote><hr><h2 id="操作步骤">操作步骤</h2><h3 id="1-复制原有目录文件夹到训练文件夹">1. 复制原有目录文件夹到训练文件夹</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> /data/gr_data_search/xxxx/xxx /data/gr_data/xxxx/xxx<br>````<br><br>---<br><br><span class="hljs-comment">### 2. 增量训练</span><br><br>**注意：**<br>`settings.yaml` 中的 `title` 字段不能和之前已训练过的数据重复，否则会跳过数据<br><br>```bash<br>python3.12 training.py update --root /data/gr_data/xxxx/xxx<br></code></pre></td></tr></table></figure><p>训练完成后会生成新目录 <code>update_output</code>：</p><ul><li><code>update_output</code>：原始内容 + 增量内容</li><li><code>update_output/delta</code>：仅增量内容</li><li><code>lancedb</code> 目录：<code>output/lancedb</code> 已自动更新，无需操作</li></ul><hr><h3 id="3-复制覆盖结构化数据">3. 复制覆盖结构化数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> update_output/*.parquet output/<br><br><span class="hljs-comment"># 删除临时目录</span><br><span class="hljs-built_in">rm</span> -r update_output<br></code></pre></td></tr></table></figure><hr><h3 id="4-新上传">4. 新上传</h3><hr><h3 id="5-备注">5. 备注</h3><ul><li><p><code>index</code> 和 <code>update</code> 都会使用缓存数据 <code>cache</code>，建议在重新训练或 update 时复用，可以提速并节省成本</p></li><li><p>删除文件只能通过重新 <code>index</code> 重建：</p></li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> -r output<br></code></pre></td></tr></table></figure><blockquote><p>update 只负责增量添加，不支持删除</p></blockquote>]]></content>
     
     
     
     <tags>
       
       <tag>graphrag</tag>
-      
-      <tag>openai</tag>
       
     </tags>
     
@@ -26,8 +24,8 @@
   
   <entry>
     <title>AI解决不了的问题之 graphrag 使用 openai sdk 出现 &quot;We could not parse the JSON body of your request&quot;</title>
-    <link href="/2026/03/27/blog/ai/rag/graphrag_update_index/"/>
-    <url>/2026/03/27/blog/ai/rag/graphrag_update_index/</url>
+    <link href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/"/>
+    <url>/2026/03/27/blog/ai/rag/graphrag_openai_json_err/</url>
     
     <content type="html"><![CDATA[<p>参考资料：</p><p><a href="https://github.com/microsoft/graphrag/issues/2286">https://github.com/microsoft/graphrag/issues/2286</a><br><a href="https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372">https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372</a></p><p>最近被安排去调查 graphrag index 失败的问题</p><p>公司的一个产品在 rag 功能为客户提供了 graphrag 选项把用户数据通过 graphrag 去聚合</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">graphrag index --root  /data/xxx/xx<br></code></pre></td></tr></table></figure><p>然而在大量训练时，经常出现</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">openai.BadRequestError: Error code: 400 - &#123;&#x27;error&#x27;: &#123;&#x27;message&#x27;: &quot;We could not parse the JSON body of your request. (HINT: This likely means you aren&#x27;t using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)&quot;, &#x27;type&#x27;: &#x27;invalid_request_error&#x27;, &#x27;param&#x27;: None, &#x27;code&#x27;: None&#125;&#125;<br></code></pre></td></tr></table></figure><p>问GPT, 一堆说什么调用不准确，上网一搜，都是有前因没结果的</p><p>训练错误的文件拿下来单独跑一下流程，又是好的</p><p>追了一下源代码，graphrag 底层还是用了 openai 官方的 sdk，所有的请求都是 openai sdk 自己发送出去的，也就是说他服务端自己不能理解自己的请求入参<br>一脸懵，没办法，只能自己改了</p><p>不侵入源码的情况下添加了两个改动项目，提升鲁棒性</p><ol><li>为 openai._base_client 添加 debug 日志，直接输出请求的入参，方便具体看到每次的入参情况</li><li>添加 graphrag 调用 openai sdk 时的重试情况，把 400 code 接入到重试里</li></ol><p>源graphrag cli代码</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br></code></pre></td></tr></table></figure><p>改动：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># training.py</span><br><span class="hljs-keyword">import</span> os.path<br><br><span class="hljs-keyword">from</span> fnllm.openai.llm.services.retryer <span class="hljs-keyword">import</span> OPENAI_RETRYABLE_ERRORS<br><span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> BadRequestError<br><br>OPENAI_RETRYABLE_ERRORS.append(BadRequestError)<br><br><span class="hljs-keyword">from</span> graphrag.cli.main <span class="hljs-keyword">import</span> app<br><span class="hljs-keyword">import</span> logging<br><br>logger = logging.getLogger(<span class="hljs-string">&quot;openai._base_client&quot;</span>)<br>logger.setLevel(logging.DEBUG)<br><br>OPENAI_BASE_CLIENT_LOG_DIR = <span class="hljs-string">&quot;/data/log&quot;</span><br><br><span class="hljs-keyword">if</span> OPENAI_BASE_CLIENT_LOG_DIR:<br>    os.makedirs(OPENAI_BASE_CLIENT_LOG_DIR, exist_ok=<span class="hljs-literal">True</span>)<br><br>file_handler = logging.FileHandler(os.path.join(OPENAI_BASE_CLIENT_LOG_DIR, <span class="hljs-string">&quot;openai_base_client.log&quot;</span>), encoding=<span class="hljs-string">&quot;utf-8&quot;</span>)<br>file_handler.setLevel(logging.DEBUG)<br><br>formatter = logging.Formatter(<br>    <span class="hljs-string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(message)s&quot;</span><br>)<br><br>file_handler.setFormatter(formatter)<br>logger.addHandler(file_handler)<br><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br><span class="hljs-comment"># python3.12 training.py index --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py query --method local --query  &quot;讲一下罗永浩和西贝发生的事&quot; --root /data/xxx/xxx</span><br><span class="hljs-comment"># python3.12 training.py update --root /data/xxx/xxx</span><br><span class="hljs-comment"># &quot;&quot;&quot;</span><br>app(prog_name=<span class="hljs-string">&quot;graphrag&quot;</span>)<br><br></code></pre></td></tr></table></figure>]]></content>
     
@@ -264,9 +262,9 @@
     
     <tags>
       
-      <tag>参考资料</tag>
-      
       <tag>vscode手册</tag>
+      
+      <tag>参考资料</tag>
       
     </tags>
     
@@ -601,9 +599,9 @@
     
     <tags>
       
-      <tag>coding手册</tag>
-      
       <tag>参考资料</tag>
+      
+      <tag>coding手册</tag>
       
     </tags>
     
@@ -964,25 +962,6 @@
   
   
   <entry>
-    <title>网络 DNS解析过程</title>
-    <link href="/2020/04/21/%E7%BD%91%E7%BB%9C/DNS%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/"/>
-    <url>/2020/04/21/%E7%BD%91%E7%BB%9C/DNS%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/</url>
-    
-    <content type="html"><![CDATA[<ol><li>客户端查本地hosts文件</li><li>DNS本地服务缓存 DNS localcache</li><li>DNS server (recursion(递归)请求)</li></ol><ul><li>就是DNS服务器自己负责解析的域：直接查询数据库并返回结果</li><li>不是自己负责的域:<ul><li>server cache:找到返回</li><li>iteration(迭代) 由根找顶级域再找二级域… 完成解析请求</li></ul></li></ul><p>返回的结果：</p><ul><li>肯定答案：确定结果(可以缓存)</li><li>否定答案：不存在查询的键, 所以不存在由键查询的值(也会缓存)</li><li>权威答案：有就是有, 没有就是没有</li><li>非权威答案：肯能server端刚发给客户端没有的结果, 自己就更新了</li></ul>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>网络</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>网络 http https</title>
     <link href="/2020/04/21/%E7%BD%91%E7%BB%9C/http_https/"/>
     <url>/2020/04/21/%E7%BD%91%E7%BB%9C/http_https/</url>
@@ -1002,11 +981,11 @@
   
   
   <entry>
-    <title>网络 浏览器输入url的全过程</title>
-    <link href="/2020/04/21/%E7%BD%91%E7%BB%9C/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E7%9A%84%E5%85%A8%E8%BF%87%E7%A8%8B/"/>
-    <url>/2020/04/21/%E7%BD%91%E7%BB%9C/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E7%9A%84%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
+    <title>网络 DNS解析过程</title>
+    <link href="/2020/04/21/%E7%BD%91%E7%BB%9C/DNS%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/"/>
+    <url>/2020/04/21/%E7%BD%91%E7%BB%9C/DNS%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/</url>
     
-    <content type="html"><![CDATA[<h3 id="浏览器输入url的全过程">浏览器输入url的全过程</h3><p><img src=".//image/3.jpg" alt=""></p><ol><li>DNS 域名解析</li><li>建立 TCP 连接</li><li>发送 HTTP 请求</li><li>服务器处理请求</li><li>服务器返回响应结果</li><li>关闭 TCP 连接</li><li>浏览器解析 HTML</li><li>浏览器渲染布局</li></ol>]]></content>
+    <content type="html"><![CDATA[<ol><li>客户端查本地hosts文件</li><li>DNS本地服务缓存 DNS localcache</li><li>DNS server (recursion(递归)请求)</li></ol><ul><li>就是DNS服务器自己负责解析的域：直接查询数据库并返回结果</li><li>不是自己负责的域:<ul><li>server cache:找到返回</li><li>iteration(迭代) 由根找顶级域再找二级域… 完成解析请求</li></ul></li></ul><p>返回的结果：</p><ul><li>肯定答案：确定结果(可以缓存)</li><li>否定答案：不存在查询的键, 所以不存在由键查询的值(也会缓存)</li><li>权威答案：有就是有, 没有就是没有</li><li>非权威答案：肯能server端刚发给客户端没有的结果, 自己就更新了</li></ul>]]></content>
     
     
     
@@ -1026,6 +1005,25 @@
     <url>/2020/04/21/%E7%BD%91%E7%BB%9C/tcp_udp/</url>
     
     <content type="html"><![CDATA[<h3 id="TCP三次握手">TCP三次握手</h3><ol><li><p>第一次握手（SYN）：客户端向服务器发送一个SYN（同步）请求，请求建立连接。此时客户端处于SYN_SEND状态。</p></li><li><p>第二次握手（SYN+ACK）：服务器接收到客户端的SYN请求后，向客户端发送一个SYN+ACK（同步+确认）响应，表示已经收到了客户端的请求，并准备好建立连接。此时服务器处于SYN_RECV状态。</p></li><li><p>第三次握手（ACK）：客户端接收到服务器的SYN+ACK响应后，向服务器发送一个ACK（确认）响应，表示已经收到了服务器的确认，并准备好传输数据。此时客户端处于ESTABLISHED状态，服务器也处于ESTABLISHED状态，表示连接已经建立。</p></li></ol><p>建立连接的时候, 发送的包都不包含任何数据, 建立连接后才发送数据, 理想状态下, TCP一旦创建, 在通信双方中的任何一方主动关闭连接之前, TCP都会一直连接下去</p><p>优点：</p><ol><li><p>可以建立可靠连接：确保客户端和服务端是连接可靠的</p></li><li><p>避免资源浪费：可以避免无效连接导致的资源浪费</p></li><li><p>安全性高：只有在建立连接后才能传输数据</p></li></ol><p>缺点：</p><ol><li><p>建立连接速度慢：需要3次确认才能建立连接</p></li><li><p>占用资源：3次握手需要占用客户端和服务端资源，如带宽，cpu等</p></li><li><p>可能被攻击：握手过程中可能会被利用进行攻击，例如SYN洪泛攻击，SYN泄露攻击等，这会导致服务端和客户端无法正常连接，影响网络的正常运行</p></li></ol><h4 id="为什么是三次">为什么是三次</h4><p>TCP 协议的作用是, 保证数据通信的完整性和可靠性, 防止丢包</p><p>TCP作为一种可靠传输控制协议, 其核心思想：既要保证数据可靠传输, 又要提高传输的效率, 而用三次恰恰可以满足以上两方面的需求</p><h4 id="为什么不是两次">为什么不是两次</h4><p>如果只是两次握手, 至多只有连接发起方的起始序列号能被确认, 另一方选择的序列号则得不到确认</p><h4 id="tcp如何保证可靠传输">tcp如何保证可靠传输</h4><p>TCP主要提供了一下几种安全机制来保证数据的安全性和可靠性</p><ol><li><p>检验和</p><p>TCP协议在发送数据前会对数据进行校验和计算，生成一个校验和，将这个校验和附加在数据包的头部。接收方在接收到数据包后，也会计算校验和，然后将计算得到的校验和与接收到的校验和进行比较，如果两者不一致，则说明数据可能已经被破坏或者发生了错误，接收方会丢弃这个数据包并发送重传请求。通过这种方式，TCP协议可以保证数据的完整性和可靠性</p></li><li><p>序列号/确认应答</p><p>TCP协议会为每个数据包分配一个唯一的序列号，接收方收到数据后，会发送一个确认应答ACK，以通知发送方数据已经正确接收。如果发送方没有收到确认应答ACK，则会重发数据包，直到收到确认应答ACK为止</p></li><li><p>超时重传</p><p>如果发送方没有收到确认应答ACK，则会定时重发数据包，直到收到确认应答ACK为止</p></li><li><p>滑动窗口控制(流量控制)</p><p>TCP协议在发送数据时，会根据接收方的接收能力设置一个滑动窗口大小。发送方在发送数据时，需要等待接收方的确认应答，确认接收到了数据包并提供了下一个期望接收的序列号，才能继续发送下一个数据包。通过这种机制，可以确保接收方可以处理自己能够处理的数据包，并且可以避免数据包的丢失或者超时等问题</p></li><li><p>拥塞控制</p><p>TCP协议通过拥塞控制机制来避免网络拥塞，保证网络的可靠性和公平性。发送方会根据网络的拥塞情况来调整发送速度，避免造成网络拥塞</p></li></ol><h3 id="四次挥手">四次挥手</h3><ol><li>由客户端向服务器发送FIN报文, 请求断开连接, 序号为x。此时TCP数据包的标志位为FIN。</li><li>服务器向客户端发送ACK报文, 表示收到了客户端发送的断开连接请求的数据包, 序号为y, 确认序号为x+1。此时TCP数据包的标志位ACK被设置为1</li><li>服务器向客户端发送FIN包, 表示服务器向客户端发送结束请求包, 序号为y, 确认序号为x+1</li><li>由客户端向服务器发送ACK报文, 表示收到服务器的结束请求包, 到这里所有流程走完, 服务器与客户端, 正式断开连接, TCP数据包的序号为x+1, 确认号为y+1</li></ol><p><img src="/asset/%E7%BD%91%E7%BB%9C/images/1.png" alt="123"><br>TIME_WAIT ：TCP 四次握手结束后, 连接双方都不再交换消息, 但主动关闭的一方保持这个连接在一段时间（2MSL两个最大报文生命周期时间）内不可用。</p><p>原因：</p><p>确保最后一个确认报文能够到达（如果B没收到A发送来的确认报文, 那么就会重新发送连接释放请求报文, A等待一段时间就是为了处理这种情况的发生）<br>避免新旧链接混淆。（等待2MSL可以让本连接持续时间内所产生的所有报文都从网络中消失, 使得下一个新的连接请求不会出现旧的连接请求报文）</p><p>优点:</p><ol><li><p>可以防止旧连接数据包被错误地认为是新连接的数据包，从而保证连接的可靠性。</p></li><li><p>可以确保在TCP连接关闭后，双方的所有数据包都被完全传输，防止数据的丢失和混乱。</p></li><li><p>可以确保连接被彻底关闭，避免出现类似于半开连接的情况，从而保证网络的稳定性</p></li></ol><p>缺点：</p><ol><li><p>TIME_WAIT状态会占用连接资源，降低系统的性能和吞吐量。</p></li><li><p>如果同时打开的TCP连接数很多，TIME_WAIT状态的连接会占用大量的连接资源，从而导致连接池耗尽和连接的延迟。</p></li><li><p>TIME_WAIT状态的时长较长（通常为2MSL），可能会对系统的可用性和响应时间造成影响。</p></li></ol><h3 id="TCP-Keepalive">TCP Keepalive</h3><p>TCP Keepalive是一种TCP/IP协议中的机制，它用于检测连接是否处于活动状态。在TCP连接空闲一段时间后，如果没有数据包传输，则Keepalive机制会定期向对端发送一个空的ACK数据包，以检测连接是否仍然处于活动状态。如果对端未能及时响应，TCP会在一定时间后关闭连接，以避免无用的连接占用系统资源</p><h3 id="UDP">UDP</h3><p>面向无连接的传输层协议，它不保证数据传输的可靠性，也不保证数据报文的顺序。UDP主要用于音视频流媒体、在线游戏等对实时性要求较高的应用场景</p><h4 id="特点">特点</h4><p>无连接：UDP不像TCP那样需要在建立连接之后再传输数据，因此可以更快地传输数据。</p><p>不可靠：UDP不保证数据的可靠性，因此在数据传输过程中可能会发生丢包、重复、错误等问题。</p><p>简单：UDP协议的头部很短，只有8个字节，相比之下TCP协议的头部就要复杂得多</p><h4 id="tpc-和-udp-的区别">tpc 和 udp 的区别?</h4><ol><li><p>连接性：TCP是一种面向连接的协议，而UDP则是无连接的。在TCP协议中，发送方和接收方必须先建立连接，然后才能进行数据传输。而在UDP协议中，发送方直接将数据报发送到接收方，不需要先建立连接。</p></li><li><p>可靠性：TCP是一种可靠性较高的协议，它通过序号、确认应答、重传等机制来确保数据传输的可靠性。而UDP协议则是不可靠的，它不保证数据传输的可靠性，也不保证数据报文的顺序。</p></li><li><p>传输效率：由于TCP协议需要建立连接、保证可靠性等机制，因此传输效率相对较低。而UDP协议则没有这些机制，传输效率相对较高。</p></li><li><p>数据大小：TCP协议没有数据大小的限制，而UDP协议则有一个64K的限制。因此，当需要传输较大的数据时，应该使用TCP协议。</p></li><li><p>应用场景：由于TCP协议具有可靠性较高、传输效率较低的特点，适合于传输重要数据、文件下载等需要保证数据可靠性的应用场景。而UDP协议则适合于实时性要求高、数据传输量较小的应用，如在线游戏、语音通话、视频直播等</p></li><li><p>TCP的逻辑通信信道是全双工的可靠信道, UDP则是不可靠信道</p></li></ol><h3 id="OSI-七层协议">OSI 七层协议</h3><ol><li>应用层(数据): 确定进程之间通信的性质以满足用户需要以及提供网络与用户应用</li><li>表示层(数据): 主要解决拥护信息的语法表示问题, 如加密解密</li><li>会话层(数据): 提供包括访问验证和会话管理在内的建立和维护应用之间通信的机制, 如服务器验证用户登录便是由会话层完成的</li><li>运输层(段): 实现网络不同主机上用户进程之间的数据通信, 可靠与不可靠的传输, 传输层的错误检测, 流量控制等</li><li>网络层(包): 提供逻辑地址（IP）、选路, 数据从源端到目的端的传输</li><li>数据链路层(帧): 将上层数据封装成帧, 用MAC地址访问媒介, 错误检测与修正</li><li>物理层（比特流）：设备之间比特流的传输, 物理接口, 电气特性等</li></ol><h3 id="TCP-IP-四层协议">TCP/IP 四层协议</h3><ol><li>应用层（TELNET、FTP、SMTP、HTTP）</li><li>运输层（TCP、UDP）</li><li>网际层（IP、ICMP）</li><li>网络接口层（PPP）</li></ol><h3 id="socket">socket</h3><p>Socket是什么</p><p>Socket是应用层与TCP/IP协议族通信的中间软件抽象层, 它是一组接口。在设计模式中, Socket其实就是一个门面模式, 它把复杂的TCP/IP协议族隐藏在Socket接口后面, 对用户来说, 一组简单的接口就是全部, 让Socket去组织数据, 以符合指定的协议</p><p><img src="/asset/%E7%BD%91%E7%BB%9C/images/2.png" alt="socket"></p><p>Socket=Ip address+ TCP/UDP + port</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>网络</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>网络 浏览器输入url的全过程</title>
+    <link href="/2020/04/21/%E7%BD%91%E7%BB%9C/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E7%9A%84%E5%85%A8%E8%BF%87%E7%A8%8B/"/>
+    <url>/2020/04/21/%E7%BD%91%E7%BB%9C/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E7%9A%84%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
+    
+    <content type="html"><![CDATA[<h3 id="浏览器输入url的全过程">浏览器输入url的全过程</h3><p><img src=".//image/3.jpg" alt=""></p><ol><li>DNS 域名解析</li><li>建立 TCP 连接</li><li>发送 HTTP 请求</li><li>服务器处理请求</li><li>服务器返回响应结果</li><li>关闭 TCP 连接</li><li>浏览器解析 HTML</li><li>浏览器渲染布局</li></ol>]]></content>
     
     
     

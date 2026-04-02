@@ -211,15 +211,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/" target="_self">
-          AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;
+        <a href="/2026/03/28/blog/ai/rag/graphrag_update_index/" target="_self">
+          graphrag 1.2 增量训练文件
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2026/03/28/blog/ai/rag/graphrag_update_index/" target="_self">
         <div>
-          参考资料： https://github.com/microsoft/graphrag/issues/2286 https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372 最近被安排去调查 graphrag index 失败的问题 公司的一个产品在 rag 功
+          注意 settings.yaml 不动，update_index_storage 放开会导致 index 时候出错，所以不能动  建议把训练目录和查询目录分开，保证在新训练时不影响旧数据，避免一些其他影响   操作步骤 1. 复制原有目录文件夹到训练文件夹 123456789101112cp /data/gr_data_search/xxxx/xxx /data/gr_data/xxxx/xxx`
         </div>
       </a>
 
@@ -227,8 +227,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2026-03-27 17:45" pubdate>
-              2026-03-27
+            <time datetime="2026-03-28 20:43" pubdate>
+              2026-03-28
             </time>
           </div>
         
@@ -238,8 +238,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/graphrag/">#graphrag</a>
-            
-              <a href="/tags/openai/">#openai</a>
             
           </div>
         
@@ -253,13 +251,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2026/03/27/blog/ai/rag/graphrag_update_index/" target="_self">
+        <a href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/" target="_self">
           AI解决不了的问题之 graphrag 使用 openai sdk 出现 &#34;We could not parse the JSON body of your request&#34;
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2026/03/27/blog/ai/rag/graphrag_update_index/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2026/03/27/blog/ai/rag/graphrag_openai_json_err/" target="_self">
         <div>
           参考资料： https://github.com/microsoft/graphrag/issues/2286 https://community.openai.com/t/solved-error-we-could-not-parse-the-json-body-of-your-request/545372 最近被安排去调查 graphrag index 失败的问题 公司的一个产品在 rag 功
         </div>
