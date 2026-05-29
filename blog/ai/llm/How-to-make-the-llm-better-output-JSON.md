@@ -43,7 +43,7 @@ result:
 **1. 提示词**  
 - 提示词中必须明确用json输出，指定格式，最好有参考示例
 
-**2. openai skd 的 response_format**
+**2. openai sdk 的 response_format**
 - 两种常用模式json_object, json_schema
 ```markdown
 1. json_object
