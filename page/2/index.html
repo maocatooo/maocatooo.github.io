@@ -211,6 +211,46 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/04/27/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/" target="_self">
+          MySQL 读写分离
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/04/27/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/" target="_self">
+        <div>
+          终于还是来了,读写分离的坑还是被我踩到了,年前接手了同事的一些代码,在上面缝缝补补,最近在自测的时候发现了一个奇怪的事儿,创建的数据推送到消息队列,本地开发环境是没有问题,到了测试环境,消息队的结构数据不正确 排查了一下发现是数据库读写分离的问题 本质就是,插入的数据,需要立马查询出来获取插入的主键ID,为后续业务提供关联 本地开发环境,连接测试数据库延时比较高(100ms往上)复现不到这个问题
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-04-27 00:00" pubdate>
+              2024-04-27
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MySQL/">#MySQL</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/03/25/blog/other/aws_step_function/" target="_self">
           AWS之Step Functions
         </a>
@@ -319,9 +359,9 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/vscode%E6%89%8B%E5%86%8C/">#vscode手册</a>
-            
               <a href="/tags/%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99/">#参考资料</a>
+            
+              <a href="/tags/vscode%E6%89%8B%E5%86%8C/">#vscode手册</a>
             
           </div>
         
@@ -568,50 +608,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/03/06/blog/article/gorm_pgsql_json/" target="_self">
-          Gorm 中使用 Postgres 的 json
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/06/blog/article/gorm_pgsql_json/" target="_self">
-        <div>
-          官方json文档 https://www.postgresql.org/docs/12/functions-json.html 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071pac
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-03-06 00:00" pubdate>
-              2023-03-06
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Golang/">#Golang</a>
-            
-              <a href="/tags/Gorm/">#Gorm</a>
-            
-              <a href="/tags/Postgres/">#Postgres</a>
             
           </div>
         

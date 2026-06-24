@@ -16,18 +16,22 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="快乐笔记">
-<meta property="og:url" content="https://maocat.cc/2026/04/02/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/SQL%E4%BC%98%E5%8C%96/index.html">
+    <meta name="description" content="接触大模型 24年做的一个项目，有一个功能，需要把用户上传的图纸识别出商品名，型号，以及材质，还有一些公司信息的敏感内容， 客户提议用当时刚GPT刚出的GPT-4o mini 来做，一套开发下来，上测试，客户发现总是有小情况，识别的内容都是空，安排我去调查 发现就是模型输出和不合规的内容 当时的提示词内容如下 12345678910You are an image recognition syst">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何让大模型更好的输出json">
+<meta property="og:url" content="https://maocat.cc/2026/05/09/blog/ai/llm/How-to-make-the-llm-better-output-JSON/index.html">
 <meta property="og:site_name" content="快乐笔记">
+<meta property="og:description" content="接触大模型 24年做的一个项目，有一个功能，需要把用户上传的图纸识别出商品名，型号，以及材质，还有一些公司信息的敏感内容， 客户提议用当时刚GPT刚出的GPT-4o mini 来做，一套开发下来，上测试，客户发现总是有小情况，识别的内容都是空，安排我去调查 发现就是模型输出和不合规的内容 当时的提示词内容如下 12345678910You are an image recognition syst">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-04-02T02:32:40.801Z">
-<meta property="article:modified_time" content="2026-04-02T02:32:40.802Z">
+<meta property="article:published_time" content="2026-05-09T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-24T01:49:47.868Z">
+<meta property="article:tag" content="OPENAI">
+<meta property="article:tag" content="LLM">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>快乐笔记</title><meta name="robots" content="noindex">
+  <title>如何让大模型更好的输出json - 快乐笔记</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -181,7 +185,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text=""></span>
+            <span id="subtitle" data-typed-text="如何让大模型更好的输出json"></span>
           
         </div>
 
@@ -192,8 +196,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-04-02 02:32" pubdate>
-          2026年4月2日 凌晨
+        <time datetime="2026-05-09 00:00" pubdate>
+          2026年5月9日 凌晨
         </time>
       </span>
     
@@ -204,7 +208,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          2.1k 字
         
       </span>
     
@@ -215,7 +219,7 @@
         
         
         
-          1 分钟
+          18 分钟
         
       </span>
     
@@ -252,12 +256,41 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header"></h1>
+            <h1 id="seo-header">如何让大模型更好的输出json</h1>
             
             
               <div class="markdown-body">
                 
-                <!-- flag of hidden posts -->
+                <h4 id="接触大模型">接触大模型</h4>
+<p>24年做的一个项目，有一个功能，需要把用户上传的图纸识别出商品名，型号，以及材质，还有一些公司信息的敏感内容，</p>
+<p>客户提议用当时刚GPT刚出的GPT-4o mini 来做，一套开发下来，上测试，客户发现总是有小情况，识别的内容都是空，安排我去调查<br>
+发现就是模型输出和不合规的内容</p>
+<p>当时的提示词内容如下</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs markdown">You are an image recognition system, you need ...<br>...<br>...<br>You need to output data in JSON structure。<br>result:<br>&#123;<br>  &quot;product<span class="hljs-emphasis">_name&quot;: &quot;&quot;,</span><br><span class="hljs-emphasis">  &quot;company_</span>name&quot;:&quot;&quot;,<br>  ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>多数情况下，模型都能正常吐内容，少数情况下，返回了</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;result&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span><br>      <span class="hljs-attr">&quot;product_name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-attr">&quot;company_name&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">,</span><br>      ...<br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>当时对结果过滤只考虑了 ```json 和 json 合法性的校验，只是没想到有这种情况，只能同时处理了</p>
+<h4 id="吐出标准化的json">吐出标准化的json</h4>
+<p>后来一些项目或多或少都有这种利用大模型输出json的需求了，慢慢结合网上别人的经验和实际使用总结一下</p>
+<p><strong>1. 提示词</strong></p>
+<ul>
+<li>提示词中必须明确用json输出，指定格式，最好有参考示例</li>
+</ul>
+<p><strong>2. openai skd 的 response_format</strong></p>
+<ul>
+<li>两种常用模式json_object, json_schema</li>
+</ul>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> json<span class="hljs-emphasis">_object</span><br><span class="hljs-emphasis">response = client.chat.completions.create(</span><br><span class="hljs-emphasis">    ...</span><br><span class="hljs-emphasis">    response_</span>format=&#123;<br><span class="hljs-code">        &quot;type&quot;: &quot;json_object&quot;</span><br><span class="hljs-code">    &#125;</span><br><span class="hljs-code">)</span><br><span class="hljs-code">2. json_schema / Structured Outputs</span><br><span class="hljs-code">response = client.chat.completions.create(</span><br><span class="hljs-code">    ...</span><br><span class="hljs-code">    response_format=&#123;</span><br><span class="hljs-code">        &quot;type&quot;: &quot;json_schema&quot;,</span><br><span class="hljs-code">        &quot;json_schema&quot;: &#123;</span><br><span class="hljs-code">            &quot;name&quot;: &quot;info&quot;,</span><br><span class="hljs-code">            &quot;strict&quot;: True,</span><br><span class="hljs-code">            &quot;schema&quot;: &#123;</span><br><span class="hljs-code">                &quot;type&quot;: &quot;object&quot;,</span><br><span class="hljs-code">                &quot;properties&quot;: &#123;</span><br><span class="hljs-code">                    &quot;product_name&quot;: &#123;</span><br><span class="hljs-code">                        &quot;type&quot;: &quot;string&quot;</span><br><span class="hljs-code">                    &#125;,</span><br><span class="hljs-code">                    &quot;company_name&quot;: &#123;</span><br><span class="hljs-code">                        &quot;type&quot;: &quot;string&quot;</span><br><span class="hljs-code">                    &#125;</span><br><span class="hljs-code">                &#125;,</span><br><span class="hljs-code">                &quot;required&quot;: [&quot;product_name&quot;, &quot;company_name&quot;],</span><br><span class="hljs-code">                &quot;additionalProperties&quot;: False</span><br><span class="hljs-code">            &#125;</span><br><span class="hljs-code">        &#125;</span><br><span class="hljs-code">    &#125;</span><br><span class="hljs-code">)</span><br></code></pre></td></tr></table></figure>
+<p><strong>3. 校验非标准结果进行多轮对话重新生成</strong></p>
+<p>在生成完毕后，json字段能对上，但是数据因为模型自身能力/幻觉，json内容牛头不对马嘴<br>
+比如：</p>
+<ul>
+<li>一个生成题目的智能体,选项ABCD，有时候成为了I,II…</li>
+<li>还有个单词练习卡片生成需要生成单词字母干扰项，干扰项本应该是单字母形式，结果出现了多个</li>
+</ul>
+<p>在有完善的规则校验下，直接把校验结果返回给AI变成输出，直接进行多轮对话，可以极大的解决这个痛点</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python">MAX_RETRY = <span class="hljs-number">3</span><br>user_prompt = <span class="hljs-string">&quot;生成一道四选一英语题&quot;</span><br>result = llm.generate(user_prompt)<br><span class="hljs-keyword">for</span> retry <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(MAX_RETRY):<br>    validate_result = validator.check(result)<br>    <span class="hljs-keyword">if</span> validate_result.pass_flag:<br>        <span class="hljs-keyword">return</span> result<br>    <span class="hljs-comment"># 构造纠错Prompt</span><br>    repair_prompt = <span class="hljs-string">f&quot;&quot;&quot;</span><br><span class="hljs-string">你生成的结果未通过校验，请仅修正错误部分并重新输出合法JSON。</span><br><span class="hljs-string">原始结果：</span><br><span class="hljs-string"><span class="hljs-subst">&#123;result&#125;</span></span><br><span class="hljs-string">校验失败原因：</span><br><span class="hljs-string"><span class="hljs-subst">&#123;validate_result.errors&#125;</span></span><br><span class="hljs-string">规则要求：</span><br><span class="hljs-string">1. 选项必须为A/B/C/D</span><br><span class="hljs-string">2. 干扰项必须是单个字母</span><br><span class="hljs-string">3. JSON结构保持不变</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br>    result = llm.generate(repair_prompt)<br><span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&quot;重试次数耗尽&quot;</span>)<br></code></pre></td></tr></table></figure>
+
                 
               </div>
             
@@ -265,6 +298,15 @@
             <div>
               <div class="post-metas my-3">
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OPENAI/" class="print-no-link">#OPENAI</a>
+      
+        <a href="/tags/LLM/" class="print-no-link">#LLM</a>
+      
+    </div>
   
 </div>
 
@@ -274,15 +316,15 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
-      <div>https://maocat.cc/2026/04/02/中间件/MySQL/SQL优化/</div>
+      <div>如何让大模型更好的输出json</div>
+      <div>https://maocat.cc/2026/05/09/blog/ai/llm/How-to-make-the-llm-better-output-JSON/</div>
     </div>
     <div class="license-meta">
       
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年4月2日</div>
+          <div>2026年5月9日</div>
         </div>
       
       
@@ -309,6 +351,23 @@
 
 
 
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/28/blog/ai/rag/graphrag_update_index/" title="graphrag 1.2 增量训练文件">
+                        <span class="hidden-mobile">graphrag 1.2 增量训练文件</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
