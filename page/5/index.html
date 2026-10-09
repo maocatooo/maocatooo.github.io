@@ -211,6 +211,86 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2022/04/06/blog/article/bug_for_the_server_date/" target="_self">
+          服务器时间导致服务崩溃
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/04/06/blog/article/bug_for_the_server_date/" target="_self">
+        <div>
+          服务器时间导致服务崩溃 测试反馈最近版本发布完,内网演示环境服务测试的时候,服务卡顿明细,让我找找问题 爬到服务器上一看,数据库负载到了20多 top + iostat 一看, 好家伙, 磁盘IO拉满了 假装分析一波发现 mongodump 这个进程在 top 中排第一位, 原来是在备份数据啊,忙问了一下领导, 回复说没有进行数据备份 仔细想了一下 crontab 里面有定时数据库备份的任务,凌晨
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-04-06 14:26" pubdate>
+              2022-04-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%80%9D%E8%80%83/">#思考</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/03/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka/" target="_self">
+          Kafka 消息队列
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/03/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka/" target="_self">
+        <div>
+          Kafka特点： 1 解耦合 消息队列提供了借口, 生产者和消费者能够独立的完成读操作和写操作。  2 高吞吐率。即使是在廉价的商用机器上也能做到单机支持每秒100K条消息的传输  3 信息传输快。以时间复杂度为O（1）的方式提供持久化能力, 即使对TB级以上数据也能保证常数时间的访问性能  4 可提供持久化。消息存储在中间件上, 数据持久化, 直到全部被处理完, 通过这一方式规避了数据丢失的风险
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-20 00:00" pubdate>
+              2022-03-20
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Kafka/">#Kafka</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2022/03/06/blog/golang/aws-s3-oss-go/" target="_self">
           使用 AWS-SDK 上传文件到 MinIO
         </a>
@@ -533,91 +613,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" target="_self">
-          操作系统一些概念
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" target="_self">
-        <div>
-          进程与线程的区别 做个简单的比喻：进程=火车, 线程=车厢  线程在进程下行进（单纯的车厢无法运行） 一个进程可以包含多个线程（一辆火车可以有多个车厢） 不同进程间数据很难共享（一辆火车上的乘客很难换到另外一辆火车, 比如站点换乘） 同一进程下不同线程间数据很易共享（A车厢换到B车厢很容易） 进程要比线程消耗更多的计算机资源（采用多列火车相比多个车厢更耗资源） 进程间不会相互影响, 一个线程挂掉将
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-04-22 00:00" pubdate>
-              2020-04-22
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">#操作系统</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/" target="_self">
-          线程和进程
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/04/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/" target="_self">
-        <div>
-          线程和进程 线程和进程的关系：线程是进程的基本执行单元, 一个进程的所有任务都在线程中执行。进程要想执行任务, 必须得有线程, 进程至少要有一条线程   区别： 地址空间：同一进程的线程共享本进程的地址空间, 而进程之间则是独立的地址空间。 资源拥有：同一进程内的线程共享本进程的资源如内存、I/O、cpu等, 但是进程之间的资源是独立的   进程间通信的方式有： 一、管道 管道, 通常指无名管道,
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-04-22 00:00" pubdate>
-              2020-04-22
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">#操作系统</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/4/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/#board">6</a><a class="page-number" href="/page/7/#board">7</a><a class="extend next" rel="next" href="/page/6/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/4/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/#board">6</a><a class="page-number" href="/page/7/#board">7</a><a class="page-number" href="/page/8/#board">8</a><a class="extend next" rel="next" href="/page/6/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

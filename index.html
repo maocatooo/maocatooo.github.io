@@ -211,6 +211,90 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2026/09/30/blog/ai/vbcode/claude_code_guide_2026/" target="_self">
+          Claude Code 个人使用总结 (2026)
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2026/09/30/blog/ai/vbcode/claude_code_guide_2026/" target="_self">
+        <div>
+          1. 新安装先使用 /statusline 配置一下终端，这个是使用 Claude Code 看过最多的地方 2. 2026 年底了，不要瞎装 code skill，现在 Claude 模型的 Agent 能力已经足够了 3. 善用 /simplify，减少屎山 4. 与其用 /compact，还不如让它吐一个简短的压缩文档，新开窗口读取这个 5. 重要的会话窗口及时 /rename，另外 Cla
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2026-09-30 17:15" pubdate>
+              2026-09-30
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/vibe-coding/">#vibe coding</a>
+            
+              <a href="/tags/Claude-Code/">#Claude Code</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2026/07/31/blog/ai/agent/agent_develop/" target="_self">
+          Agent开发手册-2026
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2026/07/31/blog/ai/agent/agent_develop/" target="_self">
+        <div>
+          Agent Agent是什么 Agent = 大脑 + 眼睛 + 手脚 Agent = LLM + [上下文 + 工具 + 约束 + 验证 + 纠正] = Model + Harness Agent运行方式 agent的运行方式：工作流 + 自主 Harness Harness 的核心就是公式中的“上下文 + 工具”，再加上三层保障机制  约束（限定 Agent 能做什么、不能做什么） 验证（检查
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2026-07-31 00:00" pubdate>
+              2026-07-31
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/OPENAI/">#OPENAI</a>
+            
+              <a href="/tags/LLM/">#LLM</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2026/05/30/blog/ai/llm/if-it-is-human/" target="_self">
           LLM只是一个知识覆盖面广，不会不耐烦，会撒谎的“普通人”
         </a>
@@ -489,11 +573,11 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/GPT5/">#GPT5</a>
-            
               <a href="/tags/OPENAI/">#OPENAI</a>
             
               <a href="/tags/LLM/">#LLM</a>
+            
+              <a href="/tags/GPT5/">#GPT5</a>
             
           </div>
         
@@ -541,93 +625,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/01/19/blog/python/pdf_merge/" target="_self">
-          使用python把多个pdf合并为一个pdf文件
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/01/19/blog/python/pdf_merge/" target="_self">
-        <div>
-          安装PyPDF2 1pip install PyPDF2 合并pdf文件 1234567891011121314151617181920from PyPDF2 import PdfMergerdef merge_pdfs(pdf_list, output_file):    merger = PdfMerger()    try:        for pdf in pdf_list:
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-01-19 00:00" pubdate>
-              2025-01-19
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/PDF/">#PDF</a>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/10/30/Python/DockerPrintNotData/" target="_self">
-          Python print() 在 Docker 不输出
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/10/30/Python/DockerPrintNotData/" target="_self">
-        <div>
-          print 输出有缓冲 解决办法  Dockerfile 1ENV PYTHONUNBUFFERED=1  docker run 1docker run -e PYTHONUNBUFFERED=1  print中的flush=True 1print(&quot;start&quot;, flush=True)   一个使用python起docker守护进程的命令 123# python3 -m h
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-10-30 00:00" pubdate>
-              2024-10-30
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/#board">7</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/#board">8</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
