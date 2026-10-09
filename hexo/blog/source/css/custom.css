@@ -1,0 +1,176 @@
+/* Orbitron - 备用 */
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/Orbitron-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/Orbitron-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/Orbitron-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/Orbitron-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(/fonts/Orbitron-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(/fonts/Orbitron-Bold.ttf) format('truetype');
+}
+
+/* Space Mono - 代码用 */
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/SpaceMono-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/SpaceMono-Bold.ttf) format('truetype');
+}
+
+/* Playfair Display - 标题衬线体 */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/PlayfairDisplay-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/PlayfairDisplay-SemiBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/PlayfairDisplay-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(/fonts/PlayfairDisplay-ExtraBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(/fonts/PlayfairDisplay-Black.ttf) format('truetype');
+}
+
+/* Merriweather - 正文衬线体 */
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/fonts/Merriweather-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/Merriweather-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/Merriweather-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(/fonts/Merriweather-Black.ttf) format('truetype');
+}
+
+/* Noto Serif SC - 中文衬体 */
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/NotoSerifSC-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/NotoSerifSC-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Noto Serif SC';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/fonts/NotoSerifSC-Bold.ttf) format('truetype');
+}
+
+/* ====== 应用字体 ====== */
+
+/* 正文 - Merriweather + 宋体 */
+body,
+.markdown-body {
+  font-family: 'Merriweather', 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif !important;
+}
+
+/* 标题 - Playfair Display + 宋体，优雅衬线统一感 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* 导航栏品牌名 */
+.navbar-brand {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  letter-spacing: 0.06em;
+}
+
+/* 代码块 - 等宽体 */
+code, pre, .highlight, .highlight * {
+  font-family: 'Space Mono', 'Courier New', monospace !important;
+  font-style: normal !important;
+}

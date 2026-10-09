@@ -1,4 +1,4 @@
-title: 快乐笔记
+title: MaoCat Playground
 markdown:
   render:
     html: true          # 是否对HTML标签进行解析，false时HTML将按照原样输出
@@ -17,10 +17,10 @@ markdown:
 subtitle: ''
 description: ''
 keywords: null
-author: null
+author: maocatooo
 language: zh-CN
 timezone: ''
-url: https://maocat.cc
+url: https://blog.246422.xyz
 permalink: ':year/:month/:day/:title/'
 permalink_defaults: null
 pretty_urls:
@@ -74,10 +74,15 @@ pagination_dir: page
 include: null
 exclude: null
 ignore: null
-theme: fluid
+theme: butterfly
 deploy:
   type: ''
 hide_posts:
   filter: hidden
   public_generators: []
   noindex: true
+search:
+  path: search.json
+  field: post
+  content: true
+  format: striptags
