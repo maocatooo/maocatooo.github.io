@@ -1,604 +1,231 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/icons8-pet-commands-train-50.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="">
-  <meta name="keywords" content="">
-  
-    <meta name="description" content="闭包不是Python独有的概念, 闭包是指在函数中可以（嵌套）定义另一个函数时, 如果内部的函数引用了外部的函数的变量, 则可能产生闭包。运行时, 一旦外部的 函数被执行, 一个闭包就形成了, 闭包中包含了内部函数的代码, 以及所需外部函数中的变量的引用。 也就是说, 在函数中声明另一个函数, 里面的函数如果引用了外层函数中的变量, 那么就形成了一个闭包。例如： 123456789In [1]:">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>闭包 | MaoCat Playground</title><meta name="author" content="maocatooo"><meta name="copyright" content="maocatooo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="闭包不是Python独有的概念, 闭包是指在函数中可以（嵌套）定义另一个函数时, 如果内部的函数引用了外部的函数的变量, 则可能产生闭包。运行时, 一旦外部的 函数被执行, 一个闭包就形成了, 闭包中包含了内部函数的代码, 以及所需外部函数中的变量的引用。 也就是说, 在函数中声明另一个函数, 里面的函数如果引用了外层函数中的变量, 那么就形成了一个闭包。例如： 123456789In [1]:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="闭包">
-<meta property="og:url" content="https://maocat.cc/2020/04/15/Python/%E9%97%AD%E5%8C%85/index.html">
-<meta property="og:site_name" content="快乐笔记">
+<meta property="og:url" content="https://blog.246422.xyz/2020/04/15/Python/%E9%97%AD%E5%8C%85/index.html">
+<meta property="og:site_name" content="MaoCat Playground">
 <meta property="og:description" content="闭包不是Python独有的概念, 闭包是指在函数中可以（嵌套）定义另一个函数时, 如果内部的函数引用了外部的函数的变量, 则可能产生闭包。运行时, 一旦外部的 函数被执行, 一个闭包就形成了, 闭包中包含了内部函数的代码, 以及所需外部函数中的变量的引用。 也就是说, 在函数中声明另一个函数, 里面的函数如果引用了外层函数中的变量, 那么就形成了一个闭包。例如： 123456789In [1]:">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.246422.xyz/img/butterfly-icon.png">
 <meta property="article:published_time" content="2020-04-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-09T08:31:28.429Z">
+<meta property="article:modified_time" content="2026-10-09T09:21:09.972Z">
+<meta property="article:author" content="maocatooo">
 <meta property="article:tag" content="Python">
-<meta name="twitter:card" content="summary_large_image">
-  
-  
-  
-  <title>闭包 - 快乐笔记</title>
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
-
-
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"maocat.cc","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.246422.xyz/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "闭包",
+  "url": "https://blog.246422.xyz/2020/04/15/Python/%E9%97%AD%E5%8C%85/",
+  "image": "https://blog.246422.xyz/img/butterfly-icon.png",
+  "datePublished": "2020-04-15T00:00:00.000Z",
+  "dateModified": "2026-10-09T09:21:09.972Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "maocatooo",
+      "url": "https://blog.246422.xyz"
     }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
-
-
-<body>
-  
-
-  <header>
-    
-
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>MaoCAT</strong>
-    </a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                <span>标签</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/maocatooo">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-  
-
-<div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle" data-typed-text="闭包"></span>
-          
-        </div>
-
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2020-04-15 00:00" pubdate>
-          2020年4月15日 凌晨
-        </time>
-      </span>
-    
-  </div>
-
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          287 字
-        
-      </span>
-    
-
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          3 分钟
-        
-      </span>
-    
-
-    
-    
-  </div>
-
-
-        
-      </div>
-
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.246422.xyz/2020/04/15/Python/%E9%97%AD%E5%8C%85/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
       
-    </div>
-  </div>
-</div>
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
 
-</div>
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
 
-  </header>
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
 
-  <main>
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const start = 6
+              const end = 18
+              const isNight =
+                start < end
+                    ? hour < start || hour >= end
+                    : hour >= start || hour < end
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
     
       
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
-          <article class="post-content mx-auto">
-            <h1 id="seo-header">闭包</h1>
-            
-            
-              <div class="markdown-body">
-                
-                <p>闭包不是Python独有的概念, 闭包是指在函数中可以（嵌套）定义另一个函数时, 如果内部的函数引用了外部的函数的变量, 则可能产生闭包。运行时, 一旦外部的 函数被执行, 一个闭包就形成了, 闭包中包含了内部函数的代码, 以及所需外部函数中的变量的引用。</p>
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '闭包',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">MaoCat Playground</span></a><a class="nav-page-title" href="/"><span class="site-name">闭包</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">闭包</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2020-04-15T00:00:00.000Z" title="发表于 2020-04-15 00:00:00">2020-04-15</time></span></div><div class="meta-secondline"></div></div></div><article class="container post-content" id="article-container"><p>闭包不是Python独有的概念, 闭包是指在函数中可以（嵌套）定义另一个函数时, 如果内部的函数引用了外部的函数的变量, 则可能产生闭包。运行时, 一旦外部的 函数被执行, 一个闭包就形成了, 闭包中包含了内部函数的代码, 以及所需外部函数中的变量的引用。</p>
 <p>也就是说, 在函数中声明另一个函数, 里面的函数如果引用了外层函数中的变量, 那么就形成了一个闭包。例如：</p>
-<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">In [1]</span><span class="hljs-punctuation">:</span> <span class="hljs-string">def foo(): </span><br>   <span class="hljs-attribute">...</span><span class="hljs-punctuation">:</span> <span class="hljs-string">    a = 1 </span><br>   <span class="hljs-attribute">...</span><span class="hljs-punctuation">:</span> <span class="hljs-string">    def bar(): </span><br>   <span class="hljs-attribute">...</span><span class="hljs-punctuation">:</span> <span class="hljs-string">        print(a) </span><br>   <span class="hljs-attribute">...</span><span class="hljs-punctuation">:</span> <span class="hljs-string">    bar() </span><br>   <span class="hljs-attribute">...</span><span class="hljs-punctuation">:             </span><br><span class="hljs-attribute">In [2]</span><span class="hljs-punctuation">:</span> <span class="hljs-string">foo()                              </span><br>1<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">In [1]: def foo(): </span><br><span class="line">   ...:     a = 1 </span><br><span class="line">   ...:     def bar(): </span><br><span class="line">   ...:         print(a) </span><br><span class="line">   ...:     bar() </span><br><span class="line">   ...:             </span><br><span class="line">In [2]: foo()                              </span><br><span class="line">1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>这个例子中, bar这个函数就是闭包函数, 它引用了 foo 函数中声明的变量 a</p>
-
-                
-              </div>
-            
-            <hr/>
-            <div>
-              <div class="post-metas my-3">
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/Python/" class="print-no-link">#Python</a>
-      
-    </div>
-  
-</div>
-
-
-              
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>闭包</div>
-      <div>https://maocat.cc/2020/04/15/Python/闭包/</div>
-    </div>
-    <div class="license-meta">
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>发布于</div>
-          <div>2020年4月15日</div>
-        </div>
-      
-      
-      
-        <div class="license-meta-item">
-          <div>许可协议</div>
-          <div>
-            
-              
-              
-                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
-                  </span>
-                </a>
-              
-            
-          </div>
-        </div>
-      
-    </div>
-    <div class="license-icon iconfont"></div>
-  </div>
-
-
-
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/04/15/Python/%E5%8D%8F%E7%A8%8B/" title="协程和线程">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">协程和线程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
-      </div>
-    </div>
-
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>目录</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-
-
-  </aside>
-
-
-    </div>
-  </div>
-</div>
-
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-
-
-
-
-    
-
-    
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-    
-
-    
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a target="_blank" href="https://beian.miit.gov.cn/" rel="nofollow noopener noopener"><span>陕ICP备19007981号-3</span></a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-    </div>
-  
-  
-  
-  
-</div>
-
-  </footer>
-
-  <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
-
-
-
-
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
-
-
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init(Object.assign({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      scrollSmooth    : true,
-      includeTitleTags: true,
-      headingsOffset  : -boardTop,
-    }, CONFIG.toc));
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('tocbot' in window) {
-        tocbot.refresh();
-        var toc = jQuery('#toc');
-        if (toc.length === 0 || !tocbot) {
-          return;
-        }
-        if (toc.find('.toc-list-item').length > 0) {
-          toc.css('visibility', 'visible');
-        }
-      }
-    });
-  });
-</script>
-
-
-  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
-
-  <script>Fluid.plugins.codeWidget();</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('anchors' in window) {
-        anchors.removeAll();
-        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-        var res = [];
-        for (var item of el) {
-          res.push('.markdown-body > ' + item.trim());
-        }
-        if (CONFIG.anchorjs.placement === 'left') {
-          anchors.options.class = 'anchorjs-link-left';
-        }
-        anchors.add(res.join(', '));
-      }
-    });
-  });
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
-
-  <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.246422.xyz">maocatooo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.246422.xyz/2020/04/15/Python/%E9%97%AD%E5%8C%85/">https://blog.246422.xyz/2020/04/15/Python/%E9%97%AD%E5%8C%85/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.246422.xyz" target="_blank">MaoCat Playground</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2020/04/20/%E4%B8%AD%E9%97%B4%E4%BB%B6/MySQL/InnoDB/" title="MySQL InnoDB"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">MySQL InnoDB</div></div><div class="info-2"><div class="info-item-1">行锁 InnoDB 的行锁模式她丝旦实现了以下两种类型的行锁 共享锁（ S ) ：又称为读锁, 简称 S 锁, 共享锁就是多个事务对于同一数据可以共享一把锁, 都能访问到数据, 但是只能读不能修改 排他锁（ X ) ：又称为写锁, 简称 X 锁, 排他锁就是不能与其他锁并存, 如一个事务获取了一个数据行的排他锁, 其他事务就不能再获取该行的其他锁, 包括共享锁和排他锁, 但是获取排他锁的事务是可以就行读取和修改 对于 UPDATE 、DELETE 和 INSERT 语句, InnoDB会自动给涉及数据加排他锁（ x ) ; 对于普通 SELECT 语句, InnoDB 不会加任何锁, 显示添加锁 12345LOCK IN SHARE MODE; # 共享锁 SFOR UPDATE; # 排他锁 X 行锁升级为表锁 WHERE 条件后面没有使用索引, 或者索引失效, 行锁会升级为表锁 间隙锁 当使用范围条件时, 而不是使用相等条件检索数据, 并请求共享或排它锁时, InnoDB会给符合条件的已有数据加锁, 对于键值在条件范围内但不存在的记录, 叫做 “间隙(GAP)”, InnoD...</div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/%E5%8D%8F%E7%A8%8B/" title="协程和线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">协程和线程</div></div><div class="info-2"><div class="info-item-1"> 迭代器 是一种可以遍历的对象，可以作用于next（）函数 生成器 Python中一边循环一边计算的机制称为生成器 比如生成器函数（yield ） 装饰器 可以使用装饰器，装饰该函数，在不改变原函数的情况下，增加功能 进程,线程和协程  进程在操作系统上运行的一个程序, 操作系统以进程为单位分配资源, 每个进程都有自己的地址空间、内存、数据栈以及其他用于跟踪进程执行的辅助数据, 操作系统管理所有进程的执行, 并为这些进程合理的分配资源 线程是操作系统能够进行运算调度的最小单位, 被包含在进程之中, 是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流, 一个进程中可以并发多个线程, 每条线程并行执行不同的任务  进程是资源（包括内存、打开的文件等）分配的单位，线程是 CPU 调度的单位 线程能减少并发执行的时间和空间开销 进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈  协程的作用, 是在执行函数A时, 可以随时中断, 去执行函数B, 然后中断继续执行函数A（可以自由切换）。但这一过程并不是函数调用（没有调用语句）, 这一整个过程看似像多线程, ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2020/04/15/Python/%E4%B8%80%E4%BA%9B%E9%A2%98%E7%9B%AE/" title="Python 一些题目"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">Python 一些题目</div></div><div class="info-2"><div class="info-item-1"> 统计频次 小内存处理大文件 默认参数问题 变量作用域规则  统计频次 如何统计一篇文章中单词的出现次数？ 使用 Counter, 例如： 12345678910In [1]: a = &quot;hello world hello world world hello this that&quot;                                                                                                                  In [2]: from collections import Counter                                                                                                                                      In [3]: counter = Counter(a.split(&quot; &quot;))           ...</div></div></div></a><a class="pagination-related" href="/2024/10/30/Python/DockerPrintNotData/" title="Python print() 在 Docker 不输出"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-30</div><div class="info-item-2">Python print() 在 Docker 不输出</div></div><div class="info-2"><div class="info-item-1">print 输出有缓冲 解决办法  Dockerfile 1ENV PYTHONUNBUFFERED=1  docker run 1docker run -e PYTHONUNBUFFERED=1  print中的flush=True 1print(&quot;start&quot;, flush=True)   一个使用python起docker守护进程的命令 123# python3 -m http.server 8000 docker run --name test-run -it -d amazonlinux:2023 python3 -m http.server 8000</div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E4%B8%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="内存管理与垃圾回收机制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">内存管理与垃圾回收机制</div></div><div class="info-2"><div class="info-item-1">内存管理与垃圾回收机制  Python 的内存管理机制及调优手段？ 内存管理机制：引用计数、垃圾回收、内存池。 引用计数： 引用计数是一种非常高效的内存管理手段,  当一个 Python 对象被引用时其引用计数增加 1,  当其不再被一个变量引用时则计数减 1. 当引用计数等于 0 时对象被删除。 垃圾回收 ： 1.引用计数 引用计数也是一种垃圾收集机制, 而且也是一种最直观, 最简单的垃圾收集技术。当 Python 的某个对象的引用计数降为 0 时, 说明没有任何引用指向该对象, 该对象就成为要被回收的垃圾了。比如某个新建对象, 它被分配给某个引用, 对象的引用计数变为 1。如果引用被删除, 对象的引用计数为 0,  那么该对象就可以被垃圾回收。不过如果出现循环引用的话, 引用计数机制就不再起有效的作用了 2.标记清除 如果两个对象的引用计数都为 1, 但是仅仅存在他们之间的循环引用, 那么这两个对象都是需要被回收的, 也就是说, 它们的引用计数虽然表现为非 0, 但实际上有效的引用计数为 0。所以先将循环引用摘掉, 就会得出这两个对象的有效计数。 3.分代回收 从前面“标记-...</div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/%E5%8D%8F%E7%A8%8B/" title="协程和线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">协程和线程</div></div><div class="info-2"><div class="info-item-1"> 迭代器 是一种可以遍历的对象，可以作用于next（）函数 生成器 Python中一边循环一边计算的机制称为生成器 比如生成器函数（yield ） 装饰器 可以使用装饰器，装饰该函数，在不改变原函数的情况下，增加功能 进程,线程和协程  进程在操作系统上运行的一个程序, 操作系统以进程为单位分配资源, 每个进程都有自己的地址空间、内存、数据栈以及其他用于跟踪进程执行的辅助数据, 操作系统管理所有进程的执行, 并为这些进程合理的分配资源 线程是操作系统能够进行运算调度的最小单位, 被包含在进程之中, 是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流, 一个进程中可以并发多个线程, 每条线程并行执行不同的任务  进程是资源（包括内存、打开的文件等）分配的单位，线程是 CPU 调度的单位 线程能减少并发执行的时间和空间开销 进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈  协程的作用, 是在执行函数A时, 可以随时中断, 去执行函数B, 然后中断继续执行函数A（可以自由切换）。但这一过程并不是函数调用（没有调用语句）, 这一整个过程看似像多线程, ...</div></div></div></a><a class="pagination-related" href="/2025/01/19/blog/python/pdf_merge/" title="使用python把多个pdf合并为一个pdf文件"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-19</div><div class="info-item-2">使用python把多个pdf合并为一个pdf文件</div></div><div class="info-2"><div class="info-item-1">安装PyPDF2 1pip install PyPDF2 合并pdf文件 1234567891011121314151617181920from PyPDF2 import PdfMergerdef merge_pdfs(pdf_list, output_file):    merger = PdfMerger()    try:        for pdf in pdf_list:            merger.append(pdf)        merger.write(output_file)        print(f&quot;PDF 文件已成功合并并保存为 &#123;output_file&#125;&quot;)    except Exception as e:        print(f&quot;合并过程中出现错误: &#123;e&#125;&quot;)    finally:        merger.close()pdf_files = [&quot;a.pdf&quot;] * 10  output_pdf = &quot;merg...</div></div></div></a><a class="pagination-related" href="/2023/04/06/blog/python/spider__interceptors_request_use/" title="&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-06</div><div class="info-item-2">&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use</div></div><div class="info-2"><div class="info-item-1">网站 1btoa(&#x27;aHR0cHM6Ly95Z3AuZ2R6d2Z3Lmdvdi5jbi8jLzQ0MDYwMC9qeWdn&#x27;) 网站中所有请求都带了 12345X-Dgi-Req-App: xxxxX-Dgi-Req-Nonce: xxxX-Dgi-Req-Signature: xxxxxxxX-Dgi-Req-Timestamp: xxx 错误的签名或者没有签名都会出现错误 1234&#123;    &quot;errcode&quot;: 91000,    &quot;errmsg&quot;: &quot;参数签名异常&quot;&#125; 看看网站js源码,使用 axios 发起响应请求 发送请求前都会设置 header 添加加密信息, 在Source里搜一下 interceptors.request.use 得到了  function u(r) 就是设置 header 添加加密参数的方法 基本上追一下就能拿取到想用的东西了 </div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">maocatooo</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maocatooo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/30/blog/ai/vbcode/claude_code_guide_2026/" title="Claude Code 个人使用总结 (2026)">Claude Code 个人使用总结 (2026)</a><time datetime="2026-09-30T17:15:42.000Z" title="发表于 2026-09-30 17:15:42">2026-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/31/blog/ai/agent/agent_develop/" title="Agent开发手册-2026">Agent开发手册-2026</a><time datetime="2026-07-31T00:00:00.000Z" title="发表于 2026-07-31 00:00:00">2026-07-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/30/blog/ai/llm/if-it-is-human/" title="LLM只是一个知识覆盖面广，不会不耐烦，会撒谎的“普通人”">LLM只是一个知识覆盖面广，不会不耐烦，会撒谎的“普通人”</a><time datetime="2026-05-30T00:00:00.000Z" title="发表于 2026-05-30 00:00:00">2026-05-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/09/blog/ai/llm/How-to-make-the-llm-better-output-JSON/" title="如何让大模型更好的输出json">如何让大模型更好的输出json</a><time datetime="2026-05-09T00:00:00.000Z" title="发表于 2026-05-09 00:00:00">2026-05-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/28/blog/ai/rag/graphrag_update_index/" title="graphrag 1.2 增量训练文件">graphrag 1.2 增量训练文件</a><time datetime="2026-03-28T20:43:12.000Z" title="发表于 2026-03-28 20:43:12">2026-03-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By maocatooo</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><div class="js-pjax"></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div></body></html>

@@ -1,620 +1,239 @@
-
-
-<!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/icons8-pet-commands-train-50.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  
-  <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="">
-  <meta name="keywords" content="">
-  
-    <meta name="description" content="网站 1btoa(&amp;#x27;aHR0cHM6Ly95Z3AuZ2R6d2Z3Lmdvdi5jbi8jLzQ0MDYwMC9qeWdn&amp;#x27;) 网站中所有请求都带了 12345X-Dgi-Req-App: xxxxX-Dgi-Req-Nonce: xxxX-Dgi-Req-Signature: xxxxxxxX-Dgi-Req-Timestamp: xxx 错误的签名或者没有签名都会出现错误">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use | MaoCat Playground</title><meta name="author" content="maocatooo"><meta name="copyright" content="maocatooo"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="网站 1btoa(&amp;#x27;aHR0cHM6Ly95Z3AuZ2R6d2Z3Lmdvdi5jbi8jLzQ0MDYwMC9qeWdn&amp;#x27;) 网站中所有请求都带了 12345X-Dgi-Req-App: xxxxX-Dgi-Req-Nonce: xxxX-Dgi-Req-Signature: xxxxxxxX-Dgi-Req-Timestamp: xxx 错误的签名或者没有签名都会出现错误">
 <meta property="og:type" content="article">
 <meta property="og:title" content="&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use">
-<meta property="og:url" content="https://maocat.cc/2023/04/06/blog/python/spider__interceptors_request_use/index.html">
-<meta property="og:site_name" content="快乐笔记">
+<meta property="og:url" content="https://blog.246422.xyz/2023/04/06/blog/python/spider__interceptors_request_use/index.html">
+<meta property="og:site_name" content="MaoCat Playground">
 <meta property="og:description" content="网站 1btoa(&amp;#x27;aHR0cHM6Ly95Z3AuZ2R6d2Z3Lmdvdi5jbi8jLzQ0MDYwMC9qeWdn&amp;#x27;) 网站中所有请求都带了 12345X-Dgi-Req-App: xxxxX-Dgi-Req-Nonce: xxxX-Dgi-Req-Signature: xxxxxxxX-Dgi-Req-Timestamp: xxx 错误的签名或者没有签名都会出现错误">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://maocat.cc/asset/blog/python/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230331173735.png">
+<meta property="og:image" content="https://blog.246422.xyz/img/butterfly-icon.png">
 <meta property="article:published_time" content="2023-04-06T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-10-09T08:31:28.427Z">
+<meta property="article:modified_time" content="2026-10-09T09:21:09.970Z">
+<meta property="article:author" content="maocatooo">
 <meta property="article:tag" content="Python">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://maocat.cc/asset/blog/python/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230331173735.png">
-  
-  
-  
-  <title>&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use - 快乐笔记</title>
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
-
-
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-
-
-<!-- 主题依赖的图标库，不要自行修改 -->
-<!-- Do not modify the link that theme dependent icons -->
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
-
-
-
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
-
-
-<link  rel="stylesheet" href="/css/main.css" />
-
-
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
-
-
-
-
-  <script id="fluid-configs">
-    var Fluid = window.Fluid || {};
-    Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"maocat.cc","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
-
-    if (CONFIG.web_analytics.follow_dnt) {
-      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.246422.xyz/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "<逆向学习小记之request headers藏了加密信息>axios拦截器之axios.interceptors.request.use",
+  "url": "https://blog.246422.xyz/2023/04/06/blog/python/spider__interceptors_request_use/",
+  "image": "https://blog.246422.xyz/img/butterfly-icon.png",
+  "datePublished": "2023-04-06T00:00:00.000Z",
+  "dateModified": "2026-10-09T09:21:09.970Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "maocatooo",
+      "url": "https://blog.246422.xyz"
     }
-  </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-  
-
-
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
-
-
-<body>
-  
-
-  <header>
-    
-
-<div class="header-inner" style="height: 70vh;">
-  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <strong>MaoCAT</strong>
-    </a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                <span>首页</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>归档</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                <span>标签</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" target="_blank" rel="noopener" href="https://github.com/maocatooo">
-                <i class="iconfont icon-user-fill"></i>
-                <span>关于</span>
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              <i class="iconfont icon-search"></i>
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
-              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-</nav>
-
-  
-
-<div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          
-            <span id="subtitle" data-typed-text="&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use"></span>
-          
-        </div>
-
-        
-          
-  <div class="mt-3">
-    
-    
-      <span class="post-meta">
-        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-06 00:00" pubdate>
-          2023年4月6日 凌晨
-        </time>
-      </span>
-    
-  </div>
-
-  <div class="mt-1">
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          401 字
-        
-      </span>
-    
-
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          4 分钟
-        
-      </span>
-    
-
-    
-    
-  </div>
-
-
-        
-      </div>
-
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.246422.xyz/2023/04/06/blog/python/spider__interceptors_request_use/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
       
-    </div>
-  </div>
-</div>
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
 
-</div>
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
 
-  </header>
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
 
-  <main>
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const start = 6
+              const end = 18
+              const isNight =
+                start < end
+                    ? hour < start || hour >= end
+                    : hour >= start || hour < end
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
     
       
-
-<div class="container-fluid nopadding-x">
-  <div class="row nomargin-x">
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-
-    </div>
-
-    <div class="col-lg-8 nopadding-x-md">
-      <div class="container nopadding-x-md" id="board-ctn">
-        <div id="board">
-          <article class="post-content mx-auto">
-            <h1 id="seo-header">&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use</h1>
-            
-            
-              <div class="markdown-body">
-                
-                <p>网站</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title function_">btoa</span>(<span class="hljs-string">&#x27;aHR0cHM6Ly95Z3AuZ2R6d2Z3Lmdvdi5jbi8jLzQ0MDYwMC9qeWdn&#x27;</span>)<br></code></pre></td></tr></table></figure>
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '<逆向学习小记之request headers藏了加密信息>axios拦截器之axios.interceptors.request.use',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">MaoCat Playground</span></a><a class="nav-page-title" href="/"><span class="site-name">&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2023-04-06T00:00:00.000Z" title="发表于 2023-04-06 00:00:00">2023-04-06</time></span></div><div class="meta-secondline"></div></div></div><article class="container post-content" id="article-container"><p>网站</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">btoa</span>(<span class="string">&#x27;aHR0cHM6Ly95Z3AuZ2R6d2Z3Lmdvdi5jbi8jLzQ0MDYwMC9qeWdn&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <p>网站中所有请求都带了</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-attribute">X-Dgi-Req-App</span><span class="hljs-punctuation">: </span>xxxx<br><span class="hljs-attribute">X-Dgi-Req-Nonce</span><span class="hljs-punctuation">: </span>xxx<br><span class="hljs-attribute">X-Dgi-Req-Signature</span><span class="hljs-punctuation">: </span>xxxxxxx<br><span class="hljs-attribute">X-Dgi-Req-Timestamp</span><span class="hljs-punctuation">: </span>xxx<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X-Dgi-Req-App: xxxx</span><br><span class="line">X-Dgi-Req-Nonce: xxx</span><br><span class="line">X-Dgi-Req-Signature: xxxxxxx</span><br><span class="line">X-Dgi-Req-Timestamp: xxx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>错误的签名或者没有签名都会出现错误</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;errcode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">91000</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;errmsg&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;参数签名异常&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;errcode&quot;</span><span class="punctuation">:</span> <span class="number">91000</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;errmsg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;参数签名异常&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>看看网站js源码,使用 axios 发起响应请求</p>
 <p>发送请求前都会设置 header 添加加密信息, 在Source里搜一下 interceptors.request.use</p>
 <p>得到了</p>
-<p><img src="/asset/blog/python/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230331173735.png" srcset="/img/loading.gif" lazyload alt="123"></p>
+<p><img src="/asset/blog/python/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230331173735.png" alt="123"></p>
 <p><code>function u(r)</code> 就是设置 header 添加加密参数的方法</p>
 <p>基本上追一下就能拿取到想用的东西了</p>
-
-                
-              </div>
-            
-            <hr/>
-            <div>
-              <div class="post-metas my-3">
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/Python/" class="print-no-link">#Python</a>
-      
-    </div>
-  
-</div>
-
-
-              
-  
-
-  <div class="license-box my-3">
-    <div class="license-title">
-      <div>&lt;逆向学习小记之request headers藏了加密信息&gt;axios拦截器之axios.interceptors.request.use</div>
-      <div>https://maocat.cc/2023/04/06/blog/python/spider__interceptors_request_use/</div>
-    </div>
-    <div class="license-meta">
-      
-      
-        <div class="license-meta-item license-meta-date">
-          <div>发布于</div>
-          <div>2023年4月6日</div>
-        </div>
-      
-      
-      
-        <div class="license-meta-item">
-          <div>许可协议</div>
-          <div>
-            
-              
-              
-                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
-                  </span>
-                </a>
-              
-            
-          </div>
-        </div>
-      
-    </div>
-    <div class="license-icon iconfont"></div>
-  </div>
-
-
-
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2023/05/13/blog/article/the_bitwarden/" title="使用 Bitwarden_RS 构建属于自己的密码管理器">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用 Bitwarden_RS 构建属于自己的密码管理器</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2023/03/06/blog/article/gorm_pgsql_json/" title="Gorm 中使用 Postgres 的 json">
-                        <span class="hidden-mobile">Gorm 中使用 Postgres 的 json</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
-      </div>
-    </div>
-
-    <div class="side-col d-none d-lg-block col-lg-2">
-      
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>目录</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
-
-
-
-  </aside>
-
-
-    </div>
-  </div>
-</div>
-
-
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-  
-
-
-
-
-
-
-
-    
-
-    
-      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
-        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-      </a>
-    
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-    
-
-    
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-  
-    <div class="footer-content">
-       <a target="_blank" href="https://beian.miit.gov.cn/" rel="nofollow noopener noopener"><span>陕ICP备19007981号-3</span></a> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-    </div>
-  
-  
-  
-  
-</div>
-
-  </footer>
-
-  <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
-
-  <script>
-    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
-    NProgress.start()
-    window.addEventListener('load', function() {
-      NProgress.done();
-    })
-  </script>
-
-
-<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
-
-
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var subtitle = document.getElementById('subtitle');
-      if (!subtitle || !typing) {
-        return;
-      }
-      var text = subtitle.getAttribute('data-typed-text');
-      
-        typing(text);
-      
-    })(window, document);
-  </script>
-
-
-
-
-  
-    <script  src="/js/img-lazyload.js" ></script>
-  
-
-
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
-    var toc = jQuery('#toc');
-    if (toc.length === 0 || !window.tocbot) { return; }
-    var boardCtn = jQuery('#board-ctn');
-    var boardTop = boardCtn.offset().top;
-
-    window.tocbot.init(Object.assign({
-      tocSelector     : '#toc-body',
-      contentSelector : '.markdown-body',
-      linkClass       : 'tocbot-link',
-      activeLinkClass : 'tocbot-active-link',
-      listClass       : 'tocbot-list',
-      isCollapsedClass: 'tocbot-is-collapsed',
-      collapsibleClass: 'tocbot-is-collapsible',
-      scrollSmooth    : true,
-      includeTitleTags: true,
-      headingsOffset  : -boardTop,
-    }, CONFIG.toc));
-    if (toc.find('.toc-list-item').length > 0) {
-      toc.css('visibility', 'visible');
-    }
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('tocbot' in window) {
-        tocbot.refresh();
-        var toc = jQuery('#toc');
-        if (toc.length === 0 || !tocbot) {
-          return;
-        }
-        if (toc.find('.toc-list-item').length > 0) {
-          toc.css('visibility', 'visible');
-        }
-      }
-    });
-  });
-</script>
-
-
-  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
-
-  <script>Fluid.plugins.codeWidget();</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-
-    Fluid.events.registerRefreshCallback(function() {
-      if ('anchors' in window) {
-        anchors.removeAll();
-        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-        var res = [];
-        for (var item of el) {
-          res.push('.markdown-body > ' + item.trim());
-        }
-        if (CONFIG.anchorjs.placement === 'left') {
-          anchors.options.class = 'anchorjs-link-left';
-        }
-        anchors.add(res.join(', '));
-      }
-    });
-  });
-</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
-    Fluid.plugins.fancyBox();
-  });
-</script>
-
-
-  <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
-
-
-
-
-
-<!-- 主题的启动项，将它保持在最底部 -->
-<!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
-
-
-  
-
-  <noscript>
-    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
-  </noscript>
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.246422.xyz">maocatooo</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.246422.xyz/2023/04/06/blog/python/spider__interceptors_request_use/">https://blog.246422.xyz/2023/04/06/blog/python/spider__interceptors_request_use/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.246422.xyz" target="_blank">MaoCat Playground</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2023/05/13/blog/article/the_bitwarden/" title="使用 Bitwarden_RS 构建属于自己的密码管理器"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">使用 Bitwarden_RS 构建属于自己的密码管理器</div></div><div class="info-2"><div class="info-item-1">痛痛痛 生活在互联网上, 账号密码的记录真的是让人头疼的问题, 各种网站应用的登录,不同的账号密码规则,有时候还有同一个网站应用开了多套账号 因此,密码管理器顺势而出,只用记住一个主密码,就可以管理所有的账号密码 市面上的密码管理器有很多,非常有名的有1Password, LastPass, Dashlane, Bitwarden等等,V站上每个月都有讨论这方面的帖子 废话多说, 分享一下个人搭建的Bitwarden_RS使用体验 Bitwarden_RS 一个docker-compose.yaml 12345678910111213141516version: &#x27;3&#x27;services:  vaultwarden:    image: vaultwarden/server:latest    environment:      - WEBSOCKET_ENABLED=true      - SIGNUPS_ALLOWED=true      - ENABLE_PASSWORD_HINTS=true      - SHOW_PASSWORD_HINT=true ...</div></div></div></a><a class="pagination-related" href="/2023/03/06/blog/golang/gin_handlefunc/" title="用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了</div></div><div class="info-2"><div class="info-item-1"> 用反射闭包了一下 Gin 的 HandlerFunc, 我终于可以开开心心的写单元测试了  上家公司是用 go-micro 写 rpc, 现在跑过来写 gin, 写单元测试构造用例可太麻烦了 用反射封装了一下，我又回到当初写微服务的快乐了 没有破坏路由也没有破坏中间件，就加了 req 和 resp 的反射封装 基佬链接: https://github.com/maocatooo/thin/tree/main/gin_handler 求个 star 废话多说，上个例子 1go get -u github.com/maocatooo/thin 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061package mainimport (	&quot;fmt&quot;	&quot;github.com/gin-gonic/gin&quot;	&quot;github.com/maocatooo/thin/gin_...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/10/30/Python/DockerPrintNotData/" title="Python print() 在 Docker 不输出"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-30</div><div class="info-item-2">Python print() 在 Docker 不输出</div></div><div class="info-2"><div class="info-item-1">print 输出有缓冲 解决办法  Dockerfile 1ENV PYTHONUNBUFFERED=1  docker run 1docker run -e PYTHONUNBUFFERED=1  print中的flush=True 1print(&quot;start&quot;, flush=True)   一个使用python起docker守护进程的命令 123# python3 -m http.server 8000 docker run --name test-run -it -d amazonlinux:2023 python3 -m http.server 8000</div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/is_or_==/" title="is 和 &#x3D;&#x3D; 的区别"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">is 和 &#x3D;&#x3D; 的区别</div></div><div class="info-2"><div class="info-item-1"> 都是对象的比较 is 比较的是内存地址 12345&gt;&gt;&gt;1 is 1True&gt;&gt;&gt;[1, 2] is [1, 2]False# 因为 id([1, 2]) 都不同 == 是两个对象的__eq__方法返回的值进行比较 因此可以重载__eq__来实现不同对象的比较 123456789class NewInt(int):    def __eq__(self, other):        return str(self) == str(other)ni = NewInt(1)print(ni == &quot;1&quot;) # True </div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/%E9%97%AD%E5%8C%85/" title="闭包"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">闭包</div></div><div class="info-2"><div class="info-item-1">闭包不是Python独有的概念, 闭包是指在函数中可以（嵌套）定义另一个函数时, 如果内部的函数引用了外部的函数的变量, 则可能产生闭包。运行时, 一旦外部的 函数被执行, 一个闭包就形成了, 闭包中包含了内部函数的代码, 以及所需外部函数中的变量的引用。 也就是说, 在函数中声明另一个函数, 里面的函数如果引用了外层函数中的变量, 那么就形成了一个闭包。例如： 123456789In [1]: def foo():    ...:     a = 1    ...:     def bar():    ...:         print(a)    ...:     bar()    ...:             In [2]: foo()                              1 这个例子中, bar这个函数就是闭包函数, 它引用了 foo 函数中声明的变量 a </div></div></div></a><a class="pagination-related" href="/2025/01/19/blog/python/pdf_merge/" title="使用python把多个pdf合并为一个pdf文件"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-19</div><div class="info-item-2">使用python把多个pdf合并为一个pdf文件</div></div><div class="info-2"><div class="info-item-1">安装PyPDF2 1pip install PyPDF2 合并pdf文件 1234567891011121314151617181920from PyPDF2 import PdfMergerdef merge_pdfs(pdf_list, output_file):    merger = PdfMerger()    try:        for pdf in pdf_list:            merger.append(pdf)        merger.write(output_file)        print(f&quot;PDF 文件已成功合并并保存为 &#123;output_file&#125;&quot;)    except Exception as e:        print(f&quot;合并过程中出现错误: &#123;e&#125;&quot;)    finally:        merger.close()pdf_files = [&quot;a.pdf&quot;] * 10  output_pdf = &quot;merg...</div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/%E5%8D%8F%E7%A8%8B/" title="协程和线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">协程和线程</div></div><div class="info-2"><div class="info-item-1"> 迭代器 是一种可以遍历的对象，可以作用于next（）函数 生成器 Python中一边循环一边计算的机制称为生成器 比如生成器函数（yield ） 装饰器 可以使用装饰器，装饰该函数，在不改变原函数的情况下，增加功能 进程,线程和协程  进程在操作系统上运行的一个程序, 操作系统以进程为单位分配资源, 每个进程都有自己的地址空间、内存、数据栈以及其他用于跟踪进程执行的辅助数据, 操作系统管理所有进程的执行, 并为这些进程合理的分配资源 线程是操作系统能够进行运算调度的最小单位, 被包含在进程之中, 是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流, 一个进程中可以并发多个线程, 每条线程并行执行不同的任务  进程是资源（包括内存、打开的文件等）分配的单位，线程是 CPU 调度的单位 线程能减少并发执行的时间和空间开销 进程拥有一个完整的资源平台，而线程只独享必不可少的资源，如寄存器和栈  协程的作用, 是在执行函数A时, 可以随时中断, 去执行函数B, 然后中断继续执行函数A（可以自由切换）。但这一过程并不是函数调用（没有调用语句）, 这一整个过程看似像多线程, ...</div></div></div></a><a class="pagination-related" href="/2020/04/15/Python/%E4%B8%80%E4%BA%9B%E9%A2%98%E7%9B%AE/" title="Python 一些题目"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-15</div><div class="info-item-2">Python 一些题目</div></div><div class="info-2"><div class="info-item-1"> 统计频次 小内存处理大文件 默认参数问题 变量作用域规则  统计频次 如何统计一篇文章中单词的出现次数？ 使用 Counter, 例如： 12345678910In [1]: a = &quot;hello world hello world world hello this that&quot;                                                                                                                  In [2]: from collections import Counter                                                                                                                                      In [3]: counter = Counter(a.split(&quot; &quot;))           ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">maocatooo</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">41</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maocatooo"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/30/blog/ai/vbcode/claude_code_guide_2026/" title="Claude Code 个人使用总结 (2026)">Claude Code 个人使用总结 (2026)</a><time datetime="2026-09-30T17:15:42.000Z" title="发表于 2026-09-30 17:15:42">2026-09-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/31/blog/ai/agent/agent_develop/" title="Agent开发手册-2026">Agent开发手册-2026</a><time datetime="2026-07-31T00:00:00.000Z" title="发表于 2026-07-31 00:00:00">2026-07-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/30/blog/ai/llm/if-it-is-human/" title="LLM只是一个知识覆盖面广，不会不耐烦，会撒谎的“普通人”">LLM只是一个知识覆盖面广，不会不耐烦，会撒谎的“普通人”</a><time datetime="2026-05-30T00:00:00.000Z" title="发表于 2026-05-30 00:00:00">2026-05-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/09/blog/ai/llm/How-to-make-the-llm-better-output-JSON/" title="如何让大模型更好的输出json">如何让大模型更好的输出json</a><time datetime="2026-05-09T00:00:00.000Z" title="发表于 2026-05-09 00:00:00">2026-05-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/28/blog/ai/rag/graphrag_update_index/" title="graphrag 1.2 增量训练文件">graphrag 1.2 增量训练文件</a><time datetime="2026-03-28T20:43:12.000Z" title="发表于 2026-03-28 20:43:12">2026-03-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By maocatooo</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.7.0"></script><script src="/js/main.js?v=5.7.0"></script><div class="js-pjax"></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.7.0"></script></div></div></body></html>
